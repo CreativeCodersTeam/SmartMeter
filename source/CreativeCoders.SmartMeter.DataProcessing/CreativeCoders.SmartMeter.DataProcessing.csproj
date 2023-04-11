@@ -7,8 +7,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="CreativeCoders.Core" Version="2.4.2" />
-      <PackageReference Include="System.IO.Ports" Version="6.0.0" />
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\CreativeCoders.SmartMeter.Sml\CreativeCoders.SmartMeter.Sml.csproj" />
     </ItemGroup>
 
 </Project>
