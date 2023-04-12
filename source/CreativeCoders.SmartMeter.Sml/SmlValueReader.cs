@@ -1,9 +1,13 @@
-﻿namespace CreativeCoders.SmartMeter.Sml;
+﻿using CreativeCoders.Core;
+
+namespace CreativeCoders.SmartMeter.Sml;
 
 public class SmlValueReader : ISmlValueReader
 {
     public IEnumerable<SmlValue> Read(byte[] data)
     {
+        Ensure.NotNull(data, nameof(data));
+        
         for (var i = 0; i < data.Length; i++)
         {
             if (data.Skip(i).Take(4).SequenceEqual(new byte[] { 0xFF, 0x01, 0x01, 0x62 }))

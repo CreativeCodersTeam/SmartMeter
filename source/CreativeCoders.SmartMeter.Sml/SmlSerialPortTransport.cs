@@ -1,4 +1,5 @@
 ﻿using System.IO.Ports;
+using CreativeCoders.Core;
 
 namespace CreativeCoders.SmartMeter.Sml;
 
@@ -10,7 +11,7 @@ public class SmlSerialPortTransport : ISmlSerialPortTransport
     
     public SmlSerialPortTransport(ISmlInputStream smlInputStream)
     {
-        _smlInputStream = smlInputStream;
+        _smlInputStream = Ensure.NotNull(smlInputStream, nameof(smlInputStream));
         
         _serialPort = new SerialPort("/dev/ttyUSB0");
         _serialPort.DataReceived += SerialPortOnDataReceived;

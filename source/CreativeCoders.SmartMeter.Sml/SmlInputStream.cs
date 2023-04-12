@@ -1,4 +1,5 @@
 ﻿using System.Collections.Concurrent;
+using CreativeCoders.Core;
 using CreativeCoders.Core.Collections;
 
 namespace CreativeCoders.SmartMeter.Sml;
@@ -29,11 +30,15 @@ public class SmlInputStream : ISmlInputStream
 
     public void AddNewData(byte[] data)
     {
+        Ensure.NotNull(data, nameof(data));
+        
         data.ForEach(x => _inputData.Add(x));
     }
 
     public void HandleSmlMessages(Action<SmlMessage> handleMessage)
     {
+        Ensure.NotNull(handleMessage, nameof(handleMessage));
+        
         SmlMessage? msg = null;
         
         _inputData.GetConsumingEnumerable().ForEach(b =>
