@@ -1,0 +1,59 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "source", "source", "{B259CB14-56CC-45FA-9756-64A195F4F789}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "__global", "__global", "{EA7A6D06-C33F-4204-B6E9-7D9D7704D554}"
+	ProjectSection(SolutionItems) = preProject
+		.gitattributes = .gitattributes
+		.gitignore = .gitignore
+		GitVersion.yml = GitVersion.yml
+		global.json = global.json
+		LICENSE = LICENSE
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreativeCoders.SmartMeter.Sml", "source\CreativeCoders.SmartMeter.Sml\CreativeCoders.SmartMeter.Sml.csproj", "{3AE1B70E-C752-4E89-B0FC-D3FF85462C99}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_build", "build\_build.csproj", "{9CFDCB58-C344-4BF8-9377-60B4D2A684A6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_build", "_build", "{AEAE0BA3-481C-45C3-825C-71A5CE7F6A78}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreativeCoders.SmartMeter.DataProcessing", "source\CreativeCoders.SmartMeter.DataProcessing\CreativeCoders.SmartMeter.DataProcessing.csproj", "{9452116E-6A8B-42D2-BBDD-BF465097AEA1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreativeCoders.SmartMeter.Server.Linux", "source\CreativeCoders.SmartMeter.Server.Linux\CreativeCoders.SmartMeter.Server.Linux.csproj", "{7AD8C940-B783-4FE9-B437-CE7FB87A97CA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreativeCoders.SmartMeter.Server.Core", "source\CreativeCoders.SmartMeter.Server.Core\CreativeCoders.SmartMeter.Server.Core.csproj", "{29638431-6971-4757-BE3B-A83D96300ED4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{3AE1B70E-C752-4E89-B0FC-D3FF85462C99} = {B259CB14-56CC-45FA-9756-64A195F4F789}
+		{9CFDCB58-C344-4BF8-9377-60B4D2A684A6} = {AEAE0BA3-481C-45C3-825C-71A5CE7F6A78}
+		{9452116E-6A8B-42D2-BBDD-BF465097AEA1} = {B259CB14-56CC-45FA-9756-64A195F4F789}
+		{7AD8C940-B783-4FE9-B437-CE7FB87A97CA} = {B259CB14-56CC-45FA-9756-64A195F4F789}
+		{29638431-6971-4757-BE3B-A83D96300ED4} = {B259CB14-56CC-45FA-9756-64A195F4F789}
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9CFDCB58-C344-4BF8-9377-60B4D2A684A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9CFDCB58-C344-4BF8-9377-60B4D2A684A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3AE1B70E-C752-4E89-B0FC-D3FF85462C99}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3AE1B70E-C752-4E89-B0FC-D3FF85462C99}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3AE1B70E-C752-4E89-B0FC-D3FF85462C99}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3AE1B70E-C752-4E89-B0FC-D3FF85462C99}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9452116E-6A8B-42D2-BBDD-BF465097AEA1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9452116E-6A8B-42D2-BBDD-BF465097AEA1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9452116E-6A8B-42D2-BBDD-BF465097AEA1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9452116E-6A8B-42D2-BBDD-BF465097AEA1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7AD8C940-B783-4FE9-B437-CE7FB87A97CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7AD8C940-B783-4FE9-B437-CE7FB87A97CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7AD8C940-B783-4FE9-B437-CE7FB87A97CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7AD8C940-B783-4FE9-B437-CE7FB87A97CA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{29638431-6971-4757-BE3B-A83D96300ED4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{29638431-6971-4757-BE3B-A83D96300ED4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{29638431-6971-4757-BE3B-A83D96300ED4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{29638431-6971-4757-BE3B-A83D96300ED4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

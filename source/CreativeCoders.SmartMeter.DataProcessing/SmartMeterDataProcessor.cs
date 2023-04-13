@@ -26,14 +26,16 @@ public class SmartMeterDataProcessor : ISmartMeterDataProcessor
         return this;
     }
 
-    private async void HandleMessageAsync(SmlMessage message)
+    private void HandleMessageAsync(SmlMessage message)
     {
         
     }
 
     public async Task RunAsync(CancellationToken cancellationToken)
     {
-        Task.Run(() => _inputStream.HandleSmlMessages(HandleMessageAsync));
+#pragma warning disable CS4014
+        Task.Run(() => _inputStream.HandleSmlMessages(HandleMessageAsync), cancellationToken);
+#pragma warning restore CS4014
         
         _serialPortTransport.StartProcessing();
         
