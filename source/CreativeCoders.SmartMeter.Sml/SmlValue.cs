@@ -7,7 +7,7 @@ public class SmlValue
         ValueType = valueType;
     }
 
-    public decimal Value { get; set; }
+    public decimal Value { get; init; }
 
     public SmlValueType ValueType { get; }
 }

@@ -28,7 +28,7 @@ public class SmlDataReader
         _handleMessage = handleMessage;
     }
 
-    public void Parse(byte[] data)
+    public void Parse(IEnumerable<byte> data)
     {
         data.ForEach(b =>
         {

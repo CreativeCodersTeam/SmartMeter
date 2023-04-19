@@ -50,7 +50,7 @@ public class ValueHistoryDataSet
         Value = Ensure.NotNull(value, nameof(value));
     }
 
-    public DateTimeOffset TimeStamp { get; set; }
+    public DateTimeOffset TimeStamp { get; init; }
 
     public SmlValue Value { get; }
 }
