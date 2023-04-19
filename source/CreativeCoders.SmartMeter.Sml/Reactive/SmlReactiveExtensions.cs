@@ -5,7 +5,7 @@ namespace CreativeCoders.SmartMeter.Sml.Reactive;
 
 public static class SmlReactiveExtensions
 {
-    public static IObservable<SmlMessage> ReadSmlMessages(this IObservable<byte[]> observable)
+    public static IObservable<SmlMessage> SelectSmlMessages(this IObservable<byte[]> observable)
     {
         var messageSubject = new Subject<SmlMessage>();
         
@@ -18,7 +18,7 @@ public static class SmlReactiveExtensions
         return messageSubject;
     }
 
-    public static IObservable<SmlValue> ReadSmlValues(this IObservable<SmlMessage> observable)
+    public static IObservable<SmlValue> SelectSmlValues(this IObservable<SmlMessage> observable)
     {
         var valueReader = new SmlValueReader();
 

@@ -19,6 +19,6 @@ public static class SmartMeterDaemonHostBuilder
 
     private static void ConfigureServices(IServiceCollection services)
     {
-        services.AddSmartMeter();
+        
     }
 }

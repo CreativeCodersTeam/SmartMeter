@@ -1,50 +1,58 @@
+using System.Reactive.Concurrency;
+using System.Reactive.Linq;
 using CreativeCoders.Core;
 using CreativeCoders.Daemon;
 using CreativeCoders.SmartMeter.DataProcessing;
+using CreativeCoders.SmartMeter.Sml.Reactive;
 using JetBrains.Annotations;
+using Microsoft.Extensions.Logging;
 
 namespace CreativeCoders.SmartMeter.Server.Core;
 
 [UsedImplicitly]
 public class SmartMeterServer : IDaemonService
 {
-    private readonly ISmartMeterDataProcessor _smartMeterDataProcessor;
+    private readonly ILogger<SmartMeterServer> _logger;
     
-    private readonly CancellationTokenSource _stoppingTokenSource;
-    
-    private Task? _runningTask;
+    private IDisposable? _subscription;
 
-    public SmartMeterServer(ISmartMeterDataProcessor smartMeterDataProcessor)
+    private readonly ReactiveSerialPort _serialPort;
+
+    public SmartMeterServer(ILogger<SmartMeterServer> logger)
     {
-        _smartMeterDataProcessor = Ensure.NotNull(smartMeterDataProcessor, nameof(smartMeterDataProcessor));
-
-        _stoppingTokenSource = new CancellationTokenSource();
+        _logger = Ensure.NotNull(logger, nameof(logger));
+        
+        _serialPort = new ReactiveSerialPort("/dev/ttyUSB0");
     }
     
     public Task StartAsync()
     {
-        if (_runningTask != null)
-        {
-            return Task.CompletedTask;
-        }
+        _logger.LogInformation("Starting SmartMeter server");
         
-        _runningTask = _smartMeterDataProcessor.RunAsync(_stoppingTokenSource.Token);
-        
+        _subscription ??= _serialPort
+            .SelectSmlMessages()
+            .SelectSmlValues()
+            .SelectSmartMeterValues()
+            .SubscribeOn(new TaskPoolScheduler(new TaskFactory()))
+            .Subscribe(value => { Console.WriteLine($"{value.Type}:  {value.Value}"); });
+
+        _serialPort.Open();
+
         return Task.CompletedTask;
     }
 
-    public async Task StopAsync()
+    public Task StopAsync()
     {
-        if (_runningTask == null)
-        {
-            return;
-        }
+        _logger.LogInformation("Stopping SmartMeter server");
         
-        _runningTask.RunSynchronously();
-        _stoppingTokenSource.Cancel();
+        _serialPort.Close();
+        
+        if (_subscription != null)
+        {
+            _subscription.Dispose();
+            _subscription = null;
+        }
 
-        await _runningTask;
-
-        _runningTask = null;
+        return Task.CompletedTask;
     }
 }
