@@ -1,4 +1,5 @@
 ﻿using CreativeCoders.Daemon;
+using CreativeCoders.SmartMeter.DataProcessing;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 
@@ -18,6 +19,6 @@ public static class SmartMeterDaemonHostBuilder
 
     private static void ConfigureServices(IServiceCollection services)
     {
-        
+        services.AddOptions();
     }
 }
