@@ -1,5 +1,4 @@
 ﻿using System.Collections.Concurrent;
-using CreativeCoders.Core;
 using CreativeCoders.SmartMeter.Sml;
 
 namespace CreativeCoders.SmartMeter.DataProcessing;
@@ -29,28 +28,4 @@ public class ValueHistory
             return historyData;
         }
     }
-}
-
-public class ValueHistoryData
-{
-    public ValueHistoryData()
-    {
-        DataSets = new List<ValueHistoryDataSet>();
-    }
-
-    public IList<ValueHistoryDataSet> DataSets { get; }
-
-    public SmlValue? LastValue { get; set; }
-}
-
-public class ValueHistoryDataSet
-{
-    public ValueHistoryDataSet(SmlValue value)
-    {
-        Value = Ensure.NotNull(value, nameof(value));
-    }
-
-    public DateTimeOffset TimeStamp { get; init; }
-
-    public SmlValue Value { get; }
 }

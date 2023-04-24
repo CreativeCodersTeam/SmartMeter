@@ -28,14 +28,22 @@ public class SmlValueProcessor : IObservable<SmartMeterValue>
         
         CalcCurrentPower(smlValue, historyData);
         
-        if (historyData.LastValue == null || historyData.LastValue.Value != smlValue.Value)
+        var now = DateTimeOffset.Now;
+        
+        historyData.DataSets.Add(new ValueHistoryDataSet(smlValue){TimeStamp = now});
+        
+        var timeDiff = (now - (historyData.LastValueTimeStamp ?? DateTimeOffset.MinValue));
+        
+        if ((historyData.LastValue?.Value == smlValue.Value ||
+            timeDiff.TotalSeconds < 30) && timeDiff.TotalMinutes < 5)
         {
-            _valueSubject.OnNext(CreateTotalSmartMeterValue(smlValue));
-            
-            historyData.DataSets.Add(new ValueHistoryDataSet(smlValue){TimeStamp = DateTimeOffset.Now});
+            return;
         }
 
+        _valueSubject.OnNext(CreateTotalSmartMeterValue(smlValue));
+        
         historyData.LastValue = smlValue;
+        historyData.LastValueTimeStamp = now;
     }
 
     private void CalcCurrentPower(SmlValue smlValue, ValueHistoryData historyData)
@@ -54,6 +62,8 @@ public class SmlValueProcessor : IObservable<SmartMeterValue>
                 var mp = TimeSpan.FromHours(1).TotalMilliseconds / timeDiff.TotalMilliseconds;
                     
                 var value = (decimal)((double)valueDiff * mp);
+                value = Math.Round(value, 1);
+                
                 _valueSubject.OnNext(CreateCurrentSmartMeterValue(smlValue.ValueType, value));
                 
                 break;
@@ -95,6 +105,7 @@ public class SmlValueProcessor : IObservable<SmartMeterValue>
     
     public IDisposable Subscribe(IObserver<SmartMeterValue> observer)
     {
-        return _valueSubject.Subscribe(observer);
+        return _valueSubject
+            .Subscribe(observer);
     }
 }

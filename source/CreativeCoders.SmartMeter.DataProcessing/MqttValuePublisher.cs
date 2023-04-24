@@ -56,7 +56,7 @@ public class MqttValuePublisher : IObserver<SmartMeterValue>
         foreach (var value in _publishingQueue.GetConsumingEnumerable())
         {
             _logger.LogInformation($"Publish value: {value.Type} = {value.Value}");
-            
+
             var publishResult = await _client.PublishAsync(
                 new MqttApplicationMessage
                 {

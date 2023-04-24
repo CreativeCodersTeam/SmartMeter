@@ -11,7 +11,13 @@ public static class SmlReactiveExtensions
         
         var smlDataReader = new SmlDataReader();
         
-        smlDataReader.AddHandler(msg => messageSubject.OnNext(msg));
+        smlDataReader.AddHandler(msg =>
+        {
+            if (msg.IsValid())
+            {
+                messageSubject.OnNext(msg);
+            }
+        });
 
         observable.Subscribe(data => smlDataReader.Parse(data));
 
@@ -23,6 +29,7 @@ public static class SmlReactiveExtensions
         var valueReader = new SmlValueReader();
 
         return observable
-            .SelectMany(msg => valueReader.Read(msg.Data));
+            .SelectMany(msg => valueReader.Read(msg.Data))
+            .Where(x => x.Value < int.MaxValue);
     }
 }
