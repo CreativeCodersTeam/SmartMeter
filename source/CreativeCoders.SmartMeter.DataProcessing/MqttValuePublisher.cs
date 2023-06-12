@@ -55,7 +55,7 @@ public class MqttValuePublisher : IObserver<SmartMeterValue>
     {
         foreach (var value in _publishingQueue.GetConsumingEnumerable())
         {
-            _logger.LogInformation($"Publish value: {value.Type} = {value.Value}");
+            _logger.LogDebug($"Publish value: {value.Type} = {value.Value}");
 
             var publishResult = await _client.PublishAsync(
                 new MqttApplicationMessage
@@ -65,7 +65,7 @@ public class MqttValuePublisher : IObserver<SmartMeterValue>
                     Payload = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(new {value.Value}))
                 });
             
-            _logger.LogInformation($"Publishing result: {publishResult.ReasonCode}  {publishResult.ReasonString}");
+            _logger.LogDebug($"Publishing result: {publishResult.ReasonCode}  {publishResult.ReasonString}");
         }
     }
 

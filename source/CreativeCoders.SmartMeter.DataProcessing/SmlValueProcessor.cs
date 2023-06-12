@@ -48,14 +48,12 @@ public class SmlValueProcessor : IObservable<SmartMeterValue>
 
     private void CalcCurrentPower(SmlValue smlValue, ValueHistoryData historyData)
     {
-        foreach (var dataSet in historyData
-                     .DataSets
-                     .Reverse())
+        foreach (var dataSet in historyData.DataSets)
         {
             var valueDiff = smlValue.Value - dataSet.Value.Value;
             var timeDiff = DateTimeOffset.Now - dataSet.TimeStamp;
 
-            if (valueDiff > 2 || timeDiff > TimeSpan.FromSeconds(20))
+            if (valueDiff > 10 || timeDiff > TimeSpan.FromSeconds(20))
             {
                 historyData.DataSets.Clear();
                 
