@@ -60,7 +60,7 @@ public class SmlValueProcessor : IObservable<SmartMeterValue>
                 var mp = TimeSpan.FromHours(1).TotalMilliseconds / timeDiff.TotalMilliseconds;
                     
                 var value = (decimal)((double)valueDiff * mp);
-                value = Math.Round(value, 1);
+                value = Math.Round(value, 0);
                 
                 _valueSubject.OnNext(CreateCurrentSmartMeterValue(smlValue.ValueType, value));
                 
