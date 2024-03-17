@@ -1,10 +1,8 @@
-﻿using System.Collections.Concurrent;
-using CreativeCoders.Core;
-using CreativeCoders.Core.Collections;
+﻿using CreativeCoders.Core.Collections;
 
-namespace CreativeCoders.SmartMeter.Sml;
+namespace CreativeCoders.SmartMeter.Sml.Reactive;
 
-public class SmlInputStream : ISmlInputStream
+public class SmlDataReader
 {
     private static readonly byte[] DocBeginSeq = {
         EscapeChar, EscapeChar, EscapeChar, EscapeChar,
@@ -15,33 +13,24 @@ public class SmlInputStream : ISmlInputStream
 
     private const byte DocBeginChar = 0x01;
     
-    private readonly BlockingCollection<byte> _inputData;
-
     private readonly List<byte> _currentBlock = new List<byte>();
 
     private readonly List<byte> _buffer = new List<byte>();
 
     private SmlReadDataMode _currentMode = SmlReadDataMode.WaitForBegin;
-    
-    public SmlInputStream()
+
+    private Action<SmlMessage> _handleMessage = _ => { };
+
+    private SmlMessage? _currentMessage;
+
+    public void AddHandler(Action<SmlMessage> handleMessage)
     {
-        _inputData = new BlockingCollection<byte>();
+        _handleMessage = handleMessage;
     }
 
-    public void AddNewData(byte[] data)
+    public void Parse(IEnumerable<byte> data)
     {
-        Ensure.NotNull(data, nameof(data));
-        
-        data.ForEach(x => _inputData.Add(x));
-    }
-
-    public void HandleSmlMessages(Action<SmlMessage> handleMessage)
-    {
-        Ensure.NotNull(handleMessage, nameof(handleMessage));
-        
-        SmlMessage? msg = null;
-        
-        _inputData.GetConsumingEnumerable().ForEach(b =>
+        data.ForEach(b =>
         {
             switch (_currentMode)
             {
@@ -85,7 +74,7 @@ public class SmlInputStream : ISmlInputStream
 
                     if (_buffer.Count == 4)
                     {
-                        msg = new SmlMessage(_currentBlock.ToArray());
+                        _currentMessage = new SmlMessage(_currentBlock.ToArray());
                         _buffer.Clear();
                         _currentBlock.Clear();
                         _currentMode = SmlReadDataMode.ReadDataEnd;
@@ -97,16 +86,20 @@ public class SmlInputStream : ISmlInputStream
 
                     if (_buffer.Count == 4)
                     {
-                        msg!.FillByteCount = _buffer[1];
-                        msg.Crc16Checksum = BitConverter.ToUInt16(_buffer.ToArray(), 2);
-                        _buffer.Clear();
-                        handleMessage(msg);
-                        msg = null;
+                        if (_currentMessage != null)
+                        {
+                            _currentMessage.FillByteCount = _buffer[1];
+                            _currentMessage.Crc16Checksum = BitConverter.ToUInt16(_buffer.ToArray(), 2);
+                            _buffer.Clear();
+                            _handleMessage(_currentMessage);
+                            _currentMessage = null;
+                        }
+                        
                         _currentMode = SmlReadDataMode.WaitForBegin;
                     }
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException(nameof(_currentMode), "Unknown parser mode");
             }
         });
     }

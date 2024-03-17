@@ -1,19 +1,18 @@
 ﻿using System.Collections.Concurrent;
-using CreativeCoders.Core;
-using CreativeCoders.Core.Threading;
+using CreativeCoders.SmartMeter.Sml;
 
 namespace CreativeCoders.SmartMeter.DataProcessing;
 
 public class ValueHistory
 {
-    private ConcurrentDictionary<SmartMeterValueType, IList<ValueHistoryData>> _data;
+    private readonly ConcurrentDictionary<SmlValueType, ValueHistoryData> _data;
 
     public ValueHistory()
     {
-        _data = new ConcurrentDictionary<SmartMeterValueType, IList<ValueHistoryData>>();
+        _data = new ConcurrentDictionary<SmlValueType, ValueHistoryData>();
     }
 
-    private IList<ValueHistoryData> GetHistoryData(SmartMeterValueType valueType)
+    public ValueHistoryData GetHistoryData(SmlValueType valueType)
     {
         lock (this)
         {
@@ -22,25 +21,11 @@ public class ValueHistory
                 return dataList;
             }
 
-            var newList = new ConcurrentList<ValueHistoryData>();
+            var historyData = new ValueHistoryData();
 
-            _data[valueType] = newList;
+            _data[valueType] = historyData;
 
-            return newList;
+            return historyData;
         }
     }
-    
-    
-}
-
-public class ValueHistoryData
-{
-    public ValueHistoryData(SmartMeterValue value)
-    {
-        Value = Ensure.NotNull(value, nameof(value));
-    }
-
-    public DateTimeOffset TimeStamp { get; set; }
-
-    public SmartMeterValue Value { get; }
 }

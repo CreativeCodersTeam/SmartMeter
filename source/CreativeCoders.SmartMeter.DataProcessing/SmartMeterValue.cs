@@ -9,5 +9,5 @@ public class SmartMeterValue
 
     public SmartMeterValueType Type { get; }
     
-    public decimal Value { get; set; }
+    public decimal Value { get; init; }
 }

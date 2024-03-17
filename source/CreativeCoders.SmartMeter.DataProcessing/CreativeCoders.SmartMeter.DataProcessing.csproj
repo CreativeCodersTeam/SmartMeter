@@ -7,7 +7,9 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="CreativeCoders.Net" Version="2.4.2" />
       <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
+      <PackageReference Include="MQTTnet" Version="4.1.4.563" />
     </ItemGroup>
 
     <ItemGroup>

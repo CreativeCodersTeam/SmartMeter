@@ -2,6 +2,7 @@
 using CreativeCoders.SmartMeter.DataProcessing;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
+using Serilog.Events;
 
 namespace CreativeCoders.SmartMeter.Server.Core;
 
@@ -14,11 +15,11 @@ public static class SmartMeterDaemonHostBuilder
             .WithArgs(args)
             .ConfigureServices(ConfigureServices)
             .ConfigureHostBuilder(x =>
-                x.UseSerilog((context, conf) => conf.WriteTo.Console()));
+                x.UseSerilog((_, conf) => conf.WriteTo.Console(LogEventLevel.Information)));
     }
 
     private static void ConfigureServices(IServiceCollection services)
     {
-        services.AddSmartMeter();
+        services.AddOptions();
     }
 }

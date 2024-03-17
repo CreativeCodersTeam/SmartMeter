@@ -1,50 +1,68 @@
+using System.Reactive.Concurrency;
+using System.Reactive.Linq;
 using CreativeCoders.Core;
 using CreativeCoders.Daemon;
 using CreativeCoders.SmartMeter.DataProcessing;
+using CreativeCoders.SmartMeter.Sml.Reactive;
 using JetBrains.Annotations;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace CreativeCoders.SmartMeter.Server.Core;
 
 [UsedImplicitly]
 public class SmartMeterServer : IDaemonService
 {
-    private readonly ISmartMeterDataProcessor _smartMeterDataProcessor;
+    private readonly ILogger<MqttValuePublisher> _publisherLogger;
+    private readonly ILogger<SmartMeterServer> _logger;
     
-    private readonly CancellationTokenSource _stoppingTokenSource;
-    
-    private Task? _runningTask;
+    private IDisposable? _subscription;
 
-    public SmartMeterServer(ISmartMeterDataProcessor smartMeterDataProcessor)
+    private readonly ReactiveSerialPort _serialPort;
+    
+    private readonly MqttPublisherOptions _mqttPublisherOptions;
+
+    public SmartMeterServer(ILogger<SmartMeterServer> logger,
+        IOptions<MqttPublisherOptions> mqttPublisherOptions,
+        ILogger<MqttValuePublisher> publisherLogger)
     {
-        _smartMeterDataProcessor = Ensure.NotNull(smartMeterDataProcessor, nameof(smartMeterDataProcessor));
-
-        _stoppingTokenSource = new CancellationTokenSource();
+        _logger = Ensure.NotNull(logger, nameof(logger));
+        _mqttPublisherOptions = mqttPublisherOptions.Value;
+        _publisherLogger = Ensure.NotNull(publisherLogger, nameof(publisherLogger));
+        
+        _serialPort = new ReactiveSerialPort("/dev/ttyUSB0");
     }
     
-    public Task StartAsync()
+    public async Task StartAsync()
     {
-        if (_runningTask != null)
+        _logger.LogInformation("Starting SmartMeter server");
+
+        var mqttValuePublisher = new MqttValuePublisher(_mqttPublisherOptions, _publisherLogger);
+
+        await mqttValuePublisher.InitAsync();
+        
+        _subscription ??= _serialPort
+            .SelectSmlMessages()
+            .SelectSmlValues()
+            .SelectSmartMeterValues()
+            .SubscribeOn(new TaskPoolScheduler(new TaskFactory()))
+            .Subscribe(mqttValuePublisher);
+        
+        _serialPort.Open();
+    }
+
+    public Task StopAsync()
+    {
+        _logger.LogInformation("Stopping SmartMeter server");
+        
+        _serialPort.Close();
+        
+        if (_subscription != null)
         {
-            return Task.CompletedTask;
+            _subscription.Dispose();
+            _subscription = null;
         }
-        
-        _runningTask = _smartMeterDataProcessor.RunAsync(_stoppingTokenSource.Token);
-        
+
         return Task.CompletedTask;
-    }
-
-    public async Task StopAsync()
-    {
-        if (_runningTask == null)
-        {
-            return;
-        }
-        
-        _runningTask.RunSynchronously();
-        _stoppingTokenSource.Cancel();
-
-        await _runningTask;
-
-        _runningTask = null;
     }
 }
