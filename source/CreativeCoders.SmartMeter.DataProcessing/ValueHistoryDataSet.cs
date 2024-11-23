@@ -7,7 +7,7 @@ public class ValueHistoryDataSet
 {
     public ValueHistoryDataSet(SmlValue value)
     {
-        Value = Ensure.NotNull(value, nameof(value));
+        Value = Ensure.NotNull(value);
     }
 
     public DateTimeOffset TimeStamp { get; init; }

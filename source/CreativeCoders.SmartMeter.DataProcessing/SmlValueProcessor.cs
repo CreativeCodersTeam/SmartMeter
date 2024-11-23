@@ -7,6 +7,7 @@ namespace CreativeCoders.SmartMeter.DataProcessing;
 public class SmlValueProcessor : IObservable<SmartMeterValue>
 {
     private readonly ValueHistory _valueHistory;
+
     private readonly Subject<SmartMeterValue> _valueSubject;
 
     public SmlValueProcessor(IObservable<SmlValue> observable)
