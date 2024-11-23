@@ -26,6 +26,7 @@ if id -u "$USER_NAME" >/dev/null 2>&1; then
 else
   echo "Create user for service and installation"
   useradd -r -s /bin/false "$USER_NAME"
+  gpasswd --add "$USER_NAME" dialout
 fi
 
 echo "Change files owner"
