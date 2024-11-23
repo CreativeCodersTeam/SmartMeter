@@ -6,10 +6,9 @@ namespace CreativeCoders.SmartMeter.DataProcessing;
 
 public class SmlValueProcessor : IObservable<SmartMeterValue>
 {
+    private readonly ValueHistory _valueHistory;
     private readonly Subject<SmartMeterValue> _valueSubject;
 
-    private readonly ValueHistory _valueHistory;
-    
     public SmlValueProcessor(IObservable<SmlValue> observable)
     {
         _valueSubject = new Subject<SmartMeterValue>();
@@ -25,23 +24,23 @@ public class SmlValueProcessor : IObservable<SmartMeterValue>
     private void ProcessValue(SmlValue smlValue)
     {
         var historyData = _valueHistory.GetHistoryData(smlValue.ValueType);
-        
+
         CalcCurrentPower(smlValue, historyData);
-        
+
         var now = DateTimeOffset.Now;
-        
-        historyData.DataSets.Add(new ValueHistoryDataSet(smlValue){TimeStamp = now});
-        
-        var timeDiff = (now - (historyData.LastValueTimeStamp ?? DateTimeOffset.MinValue));
-        
+
+        historyData.DataSets.Add(new ValueHistoryDataSet(smlValue) { TimeStamp = now });
+
+        var timeDiff = now - (historyData.LastValueTimeStamp ?? DateTimeOffset.MinValue);
+
         if ((historyData.LastValue?.Value == smlValue.Value ||
-            timeDiff.TotalSeconds < 30) && timeDiff.TotalMinutes < 5)
+             timeDiff.TotalSeconds < 30) && timeDiff.TotalMinutes < 5)
         {
             return;
         }
 
         _valueSubject.OnNext(CreateTotalSmartMeterValue(smlValue));
-        
+
         historyData.LastValue = smlValue;
         historyData.LastValueTimeStamp = now;
     }
@@ -56,14 +55,14 @@ public class SmlValueProcessor : IObservable<SmartMeterValue>
             if (valueDiff > 10 || timeDiff > TimeSpan.FromSeconds(20))
             {
                 historyData.DataSets.Clear();
-                
+
                 var mp = TimeSpan.FromHours(1).TotalMilliseconds / timeDiff.TotalMilliseconds;
-                    
+
                 var value = (decimal)((double)valueDiff * mp);
                 value = Math.Round(value, 0);
-                
+
                 _valueSubject.OnNext(CreateCurrentSmartMeterValue(smlValue.ValueType, value));
-                
+
                 break;
             }
         }
@@ -81,7 +80,7 @@ public class SmlValueProcessor : IObservable<SmartMeterValue>
             {
                 Value = value
             },
-            _ => throw new ArgumentOutOfRangeException()
+            _ => throw new ArgumentOutOfRangeException(nameof(smlValueType))
         };
     }
 
@@ -97,10 +96,10 @@ public class SmlValueProcessor : IObservable<SmartMeterValue>
             {
                 Value = smlValue.Value
             },
-            _ => throw new ArgumentOutOfRangeException()
+            _ => throw new ArgumentOutOfRangeException(nameof(smlValue.ValueType))
         };
     }
-    
+
     public IDisposable Subscribe(IObserver<SmartMeterValue> observer)
     {
         return _valueSubject

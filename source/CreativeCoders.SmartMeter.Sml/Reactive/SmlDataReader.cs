@@ -4,24 +4,25 @@ namespace CreativeCoders.SmartMeter.Sml.Reactive;
 
 public class SmlDataReader
 {
-    private static readonly byte[] DocBeginSeq = {
-        EscapeChar, EscapeChar, EscapeChar, EscapeChar,
-        DocBeginChar, DocBeginChar, DocBeginChar, DocBeginChar
-    };
-    
     private const byte EscapeChar = 0x1B;
 
     private const byte DocBeginChar = 0x01;
-    
-    private readonly List<byte> _currentBlock = new List<byte>();
 
-    private readonly List<byte> _buffer = new List<byte>();
+    private static readonly byte[] DocBeginSeq =
+    {
+        EscapeChar, EscapeChar, EscapeChar, EscapeChar,
+        DocBeginChar, DocBeginChar, DocBeginChar, DocBeginChar
+    };
+
+    private readonly List<byte> _buffer = [];
+
+    private readonly List<byte> _currentBlock = [];
+
+    private SmlMessage? _currentMessage;
 
     private SmlReadDataMode _currentMode = SmlReadDataMode.WaitForBegin;
 
     private Action<SmlMessage> _handleMessage = _ => { };
-
-    private SmlMessage? _currentMessage;
 
     public void AddHandler(Action<SmlMessage> handleMessage)
     {
@@ -40,6 +41,7 @@ public class SmlDataReader
                         _buffer.Clear();
                         break;
                     }
+
                     _buffer.Add(b);
                     if (_buffer.Count == 8)
                     {
@@ -51,6 +53,7 @@ public class SmlDataReader
                             _currentMode = SmlReadDataMode.InData;
                             break;
                         }
+
                         _buffer.Clear();
                         break;
                     }
@@ -59,7 +62,7 @@ public class SmlDataReader
                     {
                         _buffer.Clear();
                     }
-                    
+
                     break;
                 case SmlReadDataMode.InData:
                     if (b != EscapeChar)
@@ -69,7 +72,7 @@ public class SmlDataReader
                         _currentBlock.Add(b);
                         break;
                     }
-                    
+
                     _buffer.Add(b);
 
                     if (_buffer.Count == 4)
@@ -79,7 +82,7 @@ public class SmlDataReader
                         _currentBlock.Clear();
                         _currentMode = SmlReadDataMode.ReadDataEnd;
                     }
-                    
+
                     break;
                 case SmlReadDataMode.ReadDataEnd:
                     _buffer.Add(b);
@@ -94,9 +97,10 @@ public class SmlDataReader
                             _handleMessage(_currentMessage);
                             _currentMessage = null;
                         }
-                        
+
                         _currentMode = SmlReadDataMode.WaitForBegin;
                     }
+
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(_currentMode), "Unknown parser mode");

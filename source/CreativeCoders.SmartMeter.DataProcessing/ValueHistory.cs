@@ -5,12 +5,7 @@ namespace CreativeCoders.SmartMeter.DataProcessing;
 
 public class ValueHistory
 {
-    private readonly ConcurrentDictionary<SmlValueType, ValueHistoryData> _data;
-
-    public ValueHistory()
-    {
-        _data = new ConcurrentDictionary<SmlValueType, ValueHistoryData>();
-    }
+    private readonly ConcurrentDictionary<SmlValueType, ValueHistoryData> _data = new ConcurrentDictionary<SmlValueType, ValueHistoryData>();
 
     public ValueHistoryData GetHistoryData(SmlValueType valueType)
     {

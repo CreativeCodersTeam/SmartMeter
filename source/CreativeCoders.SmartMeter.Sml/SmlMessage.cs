@@ -12,10 +12,10 @@ public class SmlMessage
     public ushort CalcCrc16()
     {
         var dataForCalc = new List<byte>();
-        dataForCalc.AddRange(new byte[]{0x1b, 0x1b, 0x1b, 0x1b});
-        dataForCalc.AddRange(new byte[]{0x01, 0x01, 0x01, 0x01});
+        dataForCalc.AddRange([0x1b, 0x1b, 0x1b, 0x1b]);
+        dataForCalc.AddRange([0x01, 0x01, 0x01, 0x01]);
         dataForCalc.AddRange(Data);
-        dataForCalc.AddRange(new byte[]{0x1b, 0x1b, 0x1b, 0x1b});
+        dataForCalc.AddRange([0x1b, 0x1b, 0x1b, 0x1b]);
         dataForCalc.Add(0x1a);
         dataForCalc.Add(FillByteCount);
 
@@ -25,11 +25,11 @@ public class SmlMessage
     public byte[] GetCompleteData()
     {
         var completeData = new List<byte>();
-        
-        completeData.AddRange(new byte[]{0x1b, 0x1b, 0x1b, 0x1b});
-        completeData.AddRange(new byte[]{0x01, 0x01, 0x01, 0x01});
+
+        completeData.AddRange([0x1b, 0x1b, 0x1b, 0x1b]);
+        completeData.AddRange([0x01, 0x01, 0x01, 0x01]);
         completeData.AddRange(Data);
-        completeData.AddRange(new byte[]{0x1b, 0x1b, 0x1b, 0x1b});
+        completeData.AddRange([0x1b, 0x1b, 0x1b, 0x1b]);
         completeData.Add(0x1a);
         completeData.Add(FillByteCount);
         BitConverter.GetBytes(Crc16Checksum).Reverse().ForEach(x => completeData.Add(x));
@@ -41,7 +41,7 @@ public class SmlMessage
     {
         return CalcCrc16() == Crc16Checksum;
     }
-    
+
     private ushort CalcCrc16X25(IReadOnlyList<byte> data, int len)
     {
         ushort crc = 0xffff;
@@ -51,6 +51,7 @@ public class SmlMessage
             for (uint k = 0; k < 8; k++)
                 crc = (ushort)((crc & 1) != 0 ? (crc >> 1) ^ 0x8408 : crc >> 1);
         }
+
         return (ushort)~crc;
     }
 
