@@ -10,21 +10,21 @@ using Nuke.Common.IO;
 [GitHubActions("integration", GitHubActionsImage.UbuntuLatest,
     OnPushBranches = ["feature/**"],
     OnPullRequestBranches = ["main"],
-    InvokedTargets = ["clean", "restore", "compile", "publish"],
+    InvokedTargets = ["clean", "restore", "build", "publish"],
     EnableGitHubToken = true,
     PublishArtifacts = true,
     FetchDepth = 0
 )]
 [GitHubActions("main", GitHubActionsImage.UbuntuLatest,
     OnPushBranches = ["main"],
-    InvokedTargets = ["clean", "restore", "compile", "publish"],
+    InvokedTargets = ["clean", "restore", "build", "publish"],
     EnableGitHubToken = true,
     PublishArtifacts = true,
     FetchDepth = 0
 )]
 [GitHubActions(ReleaseWorkflow, GitHubActionsImage.UbuntuLatest,
     OnPushTags = ["v**"],
-    InvokedTargets = ["clean", "restore", "compile", "publish", "CreateDistPackages", "CreateGithubRelease"],
+    InvokedTargets = ["clean", "restore", "build", "publish", "CreateDistPackages", "CreateGithubRelease"],
     EnableGitHubToken = true,
     PublishArtifacts = true,
     FetchDepth = 0
@@ -38,15 +38,21 @@ class Build : NukeBuild,
     ICleanTarget, IBuildTarget, IRestoreTarget, IPublishTarget, ICreateDistPackagesTarget, ICreateGithubReleaseTarget
 {
     const string ReleaseWorkflow = "release";
-    
-    public static int Main () => Execute<Build>(x => ((IBuildTarget)x).Build);
+
+    [Parameter(Name = "GITHUB_TOKEN")] string GitHubToken;
 
     public Build()
     {
         FileSys.Directory.CreateDirectory(DistOutputPath);
     }
-    
-    [Parameter(Name = "GITHUB_TOKEN")] string GitHubToken;
+
+    public static int Main() => Execute<Build>(x => ((IBuildTarget)x).Build);
+
+    string GetVersion() => ((IGitVersionParameter)this).GitVersion?.NuGetVersionV2 ?? "0.1-unknown";
+
+    AbsolutePath GetSourceDir() => ((ISourceDirectoryParameter)this).SourceDirectory;
+
+    AbsolutePath GetDistDir() => ((IArtifactsSettings)this).ArtifactsDirectory / "dist";
 
     IEnumerable<PublishingItem> IPublishSettings.PublishingItems =>
     [
@@ -54,12 +60,6 @@ class Build : NukeBuild,
             GetSourceDir() / "CreativeCoders.SmartMeter.Server.Linux" / "CreativeCoders.SmartMeter.Server.Linux.csproj",
             GetDistDir() / "smartmetersrv")
     ];
-
-    string GetVersion() => ((IGitVersionParameter) this).GitVersion?.NuGetVersionV2 ?? "0.1-unknown";
-
-    AbsolutePath GetSourceDir() => ((ISourceDirectoryParameter) this).SourceDirectory;
-
-    AbsolutePath GetDistDir() => ((IArtifactsSettings) this).ArtifactsDirectory / "dist";
 
     public IEnumerable<DistPackage> DistPackages =>
     [
@@ -69,7 +69,7 @@ class Build : NukeBuild,
     public AbsolutePath DistOutputPath => GetDistDir() / "packages";
 
     public string ReleaseName => $"Release {GetVersion()}";
-    
+
     public string ReleaseBody => $"Release {GetVersion()}";
 
     public string ReleaseVersion => GetVersion();
