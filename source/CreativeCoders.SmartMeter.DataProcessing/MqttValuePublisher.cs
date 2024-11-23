@@ -1,5 +1,4 @@
 ﻿using System.Collections.Concurrent;
-using System.Net.Mime;
 using System.Text;
 using System.Text.Json;
 using CreativeCoders.Core;
@@ -12,25 +11,25 @@ namespace CreativeCoders.SmartMeter.DataProcessing;
 
 public class MqttValuePublisher : IObserver<SmartMeterValue>
 {
-    private readonly ILogger<MqttValuePublisher> _logger;
-    
-    private readonly MqttPublisherOptions _options;
-    
     private readonly IMqttClient _client;
 
+    private readonly ILogger<MqttValuePublisher> _logger;
+
+    private readonly MqttPublisherOptions _options;
+
     private readonly BlockingCollection<SmartMeterValue> _publishingQueue;
-    
+
     private readonly Thread _workerThread;
 
     public MqttValuePublisher(MqttPublisherOptions options, ILogger<MqttValuePublisher> logger)
     {
         _options = Ensure.NotNull(options, nameof(options));
         _logger = Ensure.NotNull(logger, nameof(logger));
-        
+
         _client = new MqttFactory().CreateMqttClient();
 
         _publishingQueue = new BlockingCollection<SmartMeterValue>();
-        
+
         _workerThread = new Thread(DoWork);
     }
 
@@ -47,7 +46,7 @@ public class MqttValuePublisher : IObserver<SmartMeterValue>
             throw new InvalidOperationException(
                 $"Mqtt connection failed with status: {connectResult.ResultCode}  '{connectResult.ReasonString}'");
         }
-        
+
         _workerThread.Start();
     }
 
@@ -62,21 +61,19 @@ public class MqttValuePublisher : IObserver<SmartMeterValue>
                 {
                     Topic = string.Format(_options.TopicTemplate, value.Type),
                     ContentType = ContentMediaTypes.Application.Json,
-                    Payload = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(new {value.Value}))
+                    PayloadSegment = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(new { value.Value }))
                 });
-            
+
             _logger.LogDebug($"Publishing result: {publishResult.ReasonCode}  {publishResult.ReasonString}");
         }
     }
 
     public void OnCompleted()
     {
-        
     }
 
     public void OnError(Exception error)
     {
-        
     }
 
     public void OnNext(SmartMeterValue value)

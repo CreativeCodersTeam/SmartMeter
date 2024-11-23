@@ -1,5 +1,4 @@
 ﻿using CreativeCoders.Daemon;
-using CreativeCoders.SmartMeter.DataProcessing;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using Serilog.Events;

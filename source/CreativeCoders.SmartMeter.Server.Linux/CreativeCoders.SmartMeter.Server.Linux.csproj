@@ -2,14 +2,14 @@
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
-        <TargetFramework>net6.0</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <AssemblyName>smartmetersrv</AssemblyName>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="CreativeCoders.Daemon.Linux" Version="2.4.2" />
+      <PackageReference Include="CreativeCoders.Daemon.Linux" Version="4.3.0" />
     </ItemGroup>
 
     <ItemGroup>

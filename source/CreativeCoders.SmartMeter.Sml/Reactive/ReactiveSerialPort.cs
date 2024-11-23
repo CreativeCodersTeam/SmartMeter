@@ -6,15 +6,13 @@ namespace CreativeCoders.SmartMeter.Sml.Reactive;
 
 public sealed class ReactiveSerialPort : IObservable<byte[]>, IDisposable
 {
-    private readonly SerialPort _serialPort;
-
     private readonly IObservable<byte[]> _dataObservable;
+    private readonly SerialPort _serialPort;
 
     public ReactiveSerialPort(string portName) : this(new SerialPort(portName))
     {
-        
     }
-    
+
     public ReactiveSerialPort(SerialPort serialPort)
     {
         _serialPort = Ensure.NotNull(serialPort, nameof(serialPort));
@@ -23,12 +21,12 @@ public sealed class ReactiveSerialPort : IObservable<byte[]>, IDisposable
             .FromEvent<SerialDataReceivedEventHandler, SerialDataReceivedEventArgs>(
                 handler =>
                 {
+                    return SdHandler;
+
                     void SdHandler(object sender, SerialDataReceivedEventArgs args)
                     {
                         handler(args);
                     }
-
-                    return SdHandler;
                 },
                 handler => _serialPort.DataReceived += handler,
                 handler => _serialPort.DataReceived -= handler)
@@ -53,19 +51,19 @@ public sealed class ReactiveSerialPort : IObservable<byte[]>, IDisposable
     {
         _serialPort.Open();
     }
-    
+
     public void Close()
     {
         _serialPort.Close();
-    }
-    
-    public IDisposable Subscribe(IObserver<byte[]> observer)
-    {
-        return _dataObservable.Subscribe(observer);
     }
 
     public void Dispose()
     {
         _serialPort.Dispose();
+    }
+
+    public IDisposable Subscribe(IObserver<byte[]> observer)
+    {
+        return _dataObservable.Subscribe(observer);
     }
 }

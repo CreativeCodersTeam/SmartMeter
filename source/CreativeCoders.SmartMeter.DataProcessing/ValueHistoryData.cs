@@ -4,12 +4,7 @@ namespace CreativeCoders.SmartMeter.DataProcessing;
 
 public class ValueHistoryData
 {
-    public ValueHistoryData()
-    {
-        DataSets = new List<ValueHistoryDataSet>();
-    }
-
-    public IList<ValueHistoryDataSet> DataSets { get; }
+    public IList<ValueHistoryDataSet> DataSets { get; } = new List<ValueHistoryDataSet>();
 
     public SmlValue? LastValue { get; set; }
 

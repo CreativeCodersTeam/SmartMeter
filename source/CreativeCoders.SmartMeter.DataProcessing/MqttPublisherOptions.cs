@@ -1,5 +1,8 @@
-﻿namespace CreativeCoders.SmartMeter.DataProcessing;
+﻿using JetBrains.Annotations;
 
+namespace CreativeCoders.SmartMeter.DataProcessing;
+
+[PublicAPI]
 public class MqttPublisherOptions
 {
     public Uri? Server { get; set; }
