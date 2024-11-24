@@ -7,6 +7,7 @@ namespace CreativeCoders.SmartMeter.Sml.Reactive;
 public sealed class ReactiveSerialPort : IObservable<byte[]>, IDisposable
 {
     private readonly IObservable<byte[]> _dataObservable;
+
     private readonly SerialPort _serialPort;
 
     public ReactiveSerialPort(string portName) : this(new SerialPort(portName))
@@ -15,7 +16,7 @@ public sealed class ReactiveSerialPort : IObservable<byte[]>, IDisposable
 
     public ReactiveSerialPort(SerialPort serialPort)
     {
-        _serialPort = Ensure.NotNull(serialPort, nameof(serialPort));
+        _serialPort = Ensure.NotNull(serialPort);
 
         _dataObservable = Observable
             .FromEvent<SerialDataReceivedEventHandler, SerialDataReceivedEventArgs>(
