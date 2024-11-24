@@ -12,7 +12,8 @@ fi
 
 if [ -d "$APP_DIR" ]; then
   echo "Delete existing installation files"
-  rm -rf "${APP_DIR:?}/"*
+  rm -rf "${APP_DIR:?}.bak/"*
+  mv -f "$APP_DIR" "${APP_DIR:?}.bak"
 else
   echo "Create installation target directory"
   mkdir "$APP_DIR"
