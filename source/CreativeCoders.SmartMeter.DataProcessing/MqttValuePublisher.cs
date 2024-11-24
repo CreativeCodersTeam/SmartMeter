@@ -70,8 +70,8 @@ public class MqttValuePublisher : IObserver<SmartMeterValue>
                 new MqttApplicationMessage
                 {
                     Topic = string.Format(_options.TopicTemplate, value.Type),
-                    ContentType = ContentMediaTypes.Application.Json,
-                    PayloadSegment = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(new { value.Value }))
+                    //ContentType = ContentMediaTypes.Application.Json,
+                    Payload = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(new { value.Value }))
                 });
 
             _logger.LogDebug("Publishing result: {ReasonCode}  {ReasonString}", publishResult.ReasonCode,

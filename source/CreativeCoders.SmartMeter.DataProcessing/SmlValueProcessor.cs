@@ -19,7 +19,7 @@ public class SmlValueProcessor : IObservable<SmartMeterValue>
         observable
             .Select(Observable.Return)
             .Concat()
-            .Subscribe(ProcessValue, () => _valueSubject.OnCompleted());
+            .Subscribe(ProcessValue);
     }
 
     private void ProcessValue(SmlValue smlValue)
@@ -72,6 +72,11 @@ public class SmlValueProcessor : IObservable<SmartMeterValue>
     private void PushNewCurrentValue(SmartMeterValue value)
     {
         _valueSubject.OnNext(value);
+
+        if (value.Value == 0)
+        {
+            return;
+        }
 
         switch (value.Type)
         {
