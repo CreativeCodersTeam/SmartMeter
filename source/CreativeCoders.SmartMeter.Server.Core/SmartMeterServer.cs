@@ -33,6 +33,27 @@ public class SmartMeterServer : IDaemonService
         _serialPort = new ReactiveSerialPort("/dev/ttyUSB0");
     }
 
+    private void CloseSerialPort()
+    {
+        _logger.LogInformation("Closing serial port...");
+        _serialPort.Close();
+        _logger.LogInformation("Serial port closed");
+    }
+
+    private void DisposingSubscription()
+    {
+        if (_subscription != null)
+        {
+            _logger.LogInformation("Disposing subscription...");
+
+            _subscription.Dispose();
+
+            _logger.LogInformation("Subscription disposed");
+
+            _subscription = null;
+        }
+    }
+
     public async Task StartAsync()
     {
         _logger.LogInformation("Starting SmartMeter server");
@@ -55,13 +76,11 @@ public class SmartMeterServer : IDaemonService
     {
         _logger.LogInformation("Stopping SmartMeter server");
 
-        _serialPort.Close();
+        DisposingSubscription();
 
-        if (_subscription != null)
-        {
-            _subscription.Dispose();
-            _subscription = null;
-        }
+        CloseSerialPort();
+
+        _logger.LogInformation("SmartMeter server stopped");
 
         return Task.CompletedTask;
     }
