@@ -11,27 +11,18 @@ using Microsoft.Extensions.Options;
 namespace CreativeCoders.SmartMeter.Server.Core;
 
 [UsedImplicitly]
-public class SmartMeterServer : IDaemonService
+public class SmartMeterServer(
+    ILogger<SmartMeterServer> logger,
+    IOptions<MqttPublisherOptions> mqttPublisherOptions,
+    ILoggerFactory loggerFactory)
+    : IDaemonService
 {
-    private readonly ILogger<SmartMeterServer> _logger;
-
-    private readonly MqttPublisherOptions _mqttPublisherOptions;
-    private readonly ILogger<MqttValuePublisher> _publisherLogger;
-
-    private readonly ReactiveSerialPort _serialPort;
+    private readonly ILoggerFactory _loggerFactory = Ensure.NotNull(loggerFactory);
+    private readonly ILogger<SmartMeterServer> _logger = Ensure.NotNull(logger);
+    private readonly MqttPublisherOptions _mqttPublisherOptions = mqttPublisherOptions.Value;
+    private readonly ReactiveSerialPort _serialPort = new ReactiveSerialPort("/dev/ttyUSB0");
 
     private IDisposable? _subscription;
-
-    public SmartMeterServer(ILogger<SmartMeterServer> logger,
-        IOptions<MqttPublisherOptions> mqttPublisherOptions,
-        ILogger<MqttValuePublisher> publisherLogger)
-    {
-        _logger = Ensure.NotNull(logger);
-        _mqttPublisherOptions = mqttPublisherOptions.Value;
-        _publisherLogger = Ensure.NotNull(publisherLogger);
-
-        _serialPort = new ReactiveSerialPort("/dev/ttyUSB0");
-    }
 
     private void CloseSerialPort()
     {
@@ -42,23 +33,26 @@ public class SmartMeterServer : IDaemonService
 
     private void DisposingSubscription()
     {
-        if (_subscription != null)
+        if (_subscription == null)
         {
-            _logger.LogInformation("Disposing subscription...");
-
-            _subscription.Dispose();
-
-            _logger.LogInformation("Subscription disposed");
-
-            _subscription = null;
+            return;
         }
+
+        _logger.LogInformation("Disposing subscription...");
+
+        _subscription.Dispose();
+
+        _logger.LogInformation("Subscription disposed");
+
+        _subscription = null;
     }
 
     public async Task StartAsync()
     {
         _logger.LogInformation("Starting SmartMeter server");
 
-        var mqttValuePublisher = new MqttValuePublisher(_mqttPublisherOptions, _publisherLogger);
+        var mqttValuePublisher =
+            new MqttValuePublisher(_mqttPublisherOptions, _loggerFactory.CreateLogger<MqttValuePublisher>());
 
         await mqttValuePublisher.InitAsync();
 
