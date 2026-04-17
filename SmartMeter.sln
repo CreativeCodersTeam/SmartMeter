@@ -24,6 +24,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreativeCoders.SmartMeter.S
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreativeCoders.SmartMeter.Server.Core", "source\CreativeCoders.SmartMeter.Server.Core\CreativeCoders.SmartMeter.Server.Core.csproj", "{29638431-6971-4757-BE3B-A83D96300ED4}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{675F198B-B173-421F-A53B-F7B98C8D0E4F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreativeCoders.SmartMeter.DataProcessing.Tests", "tests\CreativeCoders.SmartMeter.DataProcessing.Tests\CreativeCoders.SmartMeter.DataProcessing.Tests.csproj", "{29653CEF-A35C-4F4F-88EB-9336B7ABA9FB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,6 +39,7 @@ Global
 		{9452116E-6A8B-42D2-BBDD-BF465097AEA1} = {B259CB14-56CC-45FA-9756-64A195F4F789}
 		{7AD8C940-B783-4FE9-B437-CE7FB87A97CA} = {B259CB14-56CC-45FA-9756-64A195F4F789}
 		{29638431-6971-4757-BE3B-A83D96300ED4} = {B259CB14-56CC-45FA-9756-64A195F4F789}
+		{29653CEF-A35C-4F4F-88EB-9336B7ABA9FB} = {675F198B-B173-421F-A53B-F7B98C8D0E4F}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{9CFDCB58-C344-4BF8-9377-60B4D2A684A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -55,5 +60,9 @@ Global
 		{29638431-6971-4757-BE3B-A83D96300ED4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{29638431-6971-4757-BE3B-A83D96300ED4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{29638431-6971-4757-BE3B-A83D96300ED4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{29653CEF-A35C-4F4F-88EB-9336B7ABA9FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{29653CEF-A35C-4F4F-88EB-9336B7ABA9FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{29653CEF-A35C-4F4F-88EB-9336B7ABA9FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{29653CEF-A35C-4F4F-88EB-9336B7ABA9FB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

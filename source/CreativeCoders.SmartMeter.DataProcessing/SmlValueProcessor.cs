@@ -6,14 +6,15 @@ namespace CreativeCoders.SmartMeter.DataProcessing;
 
 public class SmlValueProcessor : IObservable<SmartMeterValue>
 {
-    private readonly ValueHistory _valueHistory;
-    private readonly Subject<SmartMeterValue> _valueSubject;
+    private readonly TimeProvider _timeProvider;
 
-    public SmlValueProcessor(IObservable<SmlValue> observable)
+    private readonly ValueHistory _valueHistory = new ValueHistory();
+
+    private readonly Subject<SmartMeterValue> _valueSubject = new Subject<SmartMeterValue>();
+
+    public SmlValueProcessor(IObservable<SmlValue> observable, TimeProvider? timeProvider = null)
     {
-        _valueSubject = new Subject<SmartMeterValue>();
-
-        _valueHistory = new ValueHistory();
+        _timeProvider = timeProvider ?? TimeProvider.System;
 
         observable
             .Select(Observable.Return)
@@ -27,7 +28,7 @@ public class SmlValueProcessor : IObservable<SmartMeterValue>
 
         CalcCurrentPower(smlValue, historyData);
 
-        var now = DateTimeOffset.Now;
+        var now = _timeProvider.GetUtcNow();
 
         historyData.DataSets.Add(new ValueHistoryDataSet(smlValue) { TimeStamp = now });
 
@@ -39,7 +40,7 @@ public class SmlValueProcessor : IObservable<SmartMeterValue>
             return;
         }
 
-        _valueSubject.OnNext(CreateTotalSmartMeterValue(smlValue));
+        _valueSubject.OnNext(CreateTotalSmartMeterValue(smlValue.ValueType, smlValue.Value));
 
         historyData.LastValue = smlValue;
         historyData.LastValueTimeStamp = now;
@@ -50,7 +51,7 @@ public class SmlValueProcessor : IObservable<SmartMeterValue>
         foreach (var dataSet in historyData.DataSets)
         {
             var valueDiff = smlValue.Value - dataSet.Value.Value;
-            var timeDiff = DateTimeOffset.Now - dataSet.TimeStamp;
+            var timeDiff = _timeProvider.GetUtcNow() - dataSet.TimeStamp;
 
             if (valueDiff > 10 || timeDiff > TimeSpan.FromSeconds(20))
             {
@@ -61,10 +62,38 @@ public class SmlValueProcessor : IObservable<SmartMeterValue>
                 var value = (decimal)((double)valueDiff * mp);
                 value = Math.Round(value, 0);
 
-                _valueSubject.OnNext(CreateCurrentSmartMeterValue(smlValue.ValueType, value));
+                PushNewCurrentValue(CreateCurrentSmartMeterValue(smlValue.ValueType, value));
 
                 break;
             }
+        }
+    }
+
+    private void PushNewCurrentValue(SmartMeterValue value)
+    {
+        _valueSubject.OnNext(value);
+
+        if (value.Value == 0)
+        {
+            return;
+        }
+
+        switch (value.Type)
+        {
+            case SmartMeterValueType.CurrentPurchasingPower:
+                _valueSubject.OnNext(new SmartMeterValue(SmartMeterValueType.GridPowerBalance)
+                {
+                    Value = value.Value,
+                    WriteAsJson = false
+                });
+                break;
+            case SmartMeterValueType.CurrentSellingPower:
+                _valueSubject.OnNext(new SmartMeterValue(SmartMeterValueType.GridPowerBalance)
+                {
+                    Value = value.Value * -1,
+                    WriteAsJson = false
+                });
+                break;
         }
     }
 
@@ -84,19 +113,19 @@ public class SmlValueProcessor : IObservable<SmartMeterValue>
         };
     }
 
-    private static SmartMeterValue CreateTotalSmartMeterValue(SmlValue smlValue)
+    private static SmartMeterValue CreateTotalSmartMeterValue(SmlValueType smlValueType, decimal value)
     {
-        return smlValue.ValueType switch
+        return smlValueType switch
         {
             SmlValueType.PurchasedEnergy => new SmartMeterValue(SmartMeterValueType.TotalPurchasedEnergy)
             {
-                Value = smlValue.Value
+                Value = value
             },
             SmlValueType.SoldEnergy => new SmartMeterValue(SmartMeterValueType.TotalSoldEnergy)
             {
-                Value = smlValue.Value
+                Value = value
             },
-            _ => throw new ArgumentOutOfRangeException(nameof(smlValue.ValueType))
+            _ => throw new ArgumentOutOfRangeException(nameof(smlValueType))
         };
     }
 

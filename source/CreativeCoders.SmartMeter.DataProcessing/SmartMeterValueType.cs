@@ -5,5 +5,6 @@ public enum SmartMeterValueType
     TotalPurchasedEnergy,
     TotalSoldEnergy,
     CurrentPurchasingPower,
-    CurrentSellingPower
+    CurrentSellingPower,
+    GridPowerBalance
 }
