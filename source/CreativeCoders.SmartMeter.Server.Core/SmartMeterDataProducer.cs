@@ -19,6 +19,7 @@ public class SmartMeterDataProducer(ILogger<SmartMeterDataProducer> logger) : IS
         _logger.LogInformation("Starting SmartMeter data producer");
 
         _subscription ??= _serialPort
+            .Do(_ => _logger.LogDebug("Data received from serial port"))
             .SelectSmlMessages()
             .SelectSmlValues()
             .SelectSmartMeterValues()
