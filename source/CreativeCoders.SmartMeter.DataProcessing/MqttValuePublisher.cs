@@ -5,7 +5,6 @@ using CreativeCoders.Core;
 using CreativeCoders.Net;
 using Microsoft.Extensions.Logging;
 using MQTTnet;
-using MQTTnet.Client;
 
 namespace CreativeCoders.SmartMeter.DataProcessing;
 
@@ -23,10 +22,10 @@ public class MqttValuePublisher : IObserver<SmartMeterValue>
 
     public MqttValuePublisher(MqttPublisherOptions options, ILogger<MqttValuePublisher> logger)
     {
-        _options = Ensure.NotNull(options, nameof(options));
-        _logger = Ensure.NotNull(logger, nameof(logger));
+        _options = Ensure.NotNull(options);
+        _logger = Ensure.NotNull(logger);
 
-        _client = new MqttFactory().CreateMqttClient();
+        _client = new MqttClientFactory().CreateMqttClient();
 
         _publishingQueue = new BlockingCollection<SmartMeterValue>();
 

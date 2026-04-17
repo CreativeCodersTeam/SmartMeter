@@ -26,9 +26,9 @@ public class SmartMeterServer : IDaemonService
         IOptions<MqttPublisherOptions> mqttPublisherOptions,
         ILogger<MqttValuePublisher> publisherLogger)
     {
-        _logger = Ensure.NotNull(logger, nameof(logger));
+        _logger = Ensure.NotNull(logger);
         _mqttPublisherOptions = mqttPublisherOptions.Value;
-        _publisherLogger = Ensure.NotNull(publisherLogger, nameof(publisherLogger));
+        _publisherLogger = Ensure.NotNull(publisherLogger);
         
         _serialPort = new ReactiveSerialPort("/dev/ttyUSB0");
     }

@@ -15,7 +15,7 @@ public sealed class ReactiveSerialPort : IObservable<byte[]>, IDisposable
 
     public ReactiveSerialPort(SerialPort serialPort)
     {
-        _serialPort = Ensure.NotNull(serialPort, nameof(serialPort));
+        _serialPort = Ensure.NotNull(serialPort);
 
         _dataObservable = Observable
             .FromEvent<SerialDataReceivedEventHandler, SerialDataReceivedEventArgs>(

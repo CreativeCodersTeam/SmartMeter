@@ -1,15 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
+        <Description>Classes for SML protocol implementation to access smart meters</Description>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="CreativeCoders.Core" Version="4.3.0" />
-      <PackageReference Include="System.IO.Ports" Version="8.0.0" />
-      <PackageReference Include="System.Reactive" Version="6.0.1" />
+      <PackageReference Include="CreativeCoders.Core" />
+      <PackageReference Include="System.IO.Ports" />
+      <PackageReference Include="System.Reactive" />
     </ItemGroup>
 
 </Project>

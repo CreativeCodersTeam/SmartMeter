@@ -1,0 +1,18 @@
+<Project>
+    <PropertyGroup>
+        <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageVersion Include="CreativeCoders.Core" Version="6.7.1" />
+        <PackageVersion Include="CreativeCoders.Daemon" Version="6.7.1" />
+        <PackageVersion Include="CreativeCoders.Daemon.Linux" Version="6.7.1" />
+        <PackageVersion Include="CreativeCoders.Net" Version="6.7.1" />
+        <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.6" />
+        <PackageVersion Include="MQTTnet" Version="5.1.0.1559" />
+        <PackageVersion Include="Serilog.Extensions.Hosting" Version="10.0.0" />
+        <PackageVersion Include="Serilog.Sinks.Console" Version="6.1.1" />
+        <PackageVersion Include="System.IO.Ports" Version="10.0.6" />
+        <PackageVersion Include="System.Reactive" Version="6.1.0" />
+    </ItemGroup>
+</Project>

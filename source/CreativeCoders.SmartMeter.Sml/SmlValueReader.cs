@@ -6,7 +6,7 @@ public class SmlValueReader : ISmlValueReader
 {
     public IEnumerable<SmlValue> Read(byte[] data)
     {
-        Ensure.NotNull(data, nameof(data));
+        Ensure.NotNull(data);
         
         for (var i = 0; i < data.Length; i++)
         {
