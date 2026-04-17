@@ -14,5 +14,16 @@
         <PackageVersion Include="Serilog.Sinks.Console" Version="6.1.1" />
         <PackageVersion Include="System.IO.Ports" Version="10.0.6" />
         <PackageVersion Include="System.Reactive" Version="6.1.0" />
+
+        <!-- Test packages -->
+        <PackageVersion Include="AwesomeAssertions" Version="9.4.0" />
+        <PackageVersion Include="coverlet.collector" Version="6.0.2" />
+        <PackageVersion Include="FakeItEasy" Version="8.3.0" />
+        <PackageVersion Include="JetBrains.Annotations" Version="2025.2.4" />
+        <PackageVersion Include="Microsoft.Extensions.TimeProvider.Testing" Version="8.10.0" />
+        <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
+        <PackageVersion Include="xunit" Version="2.9.2" />
+        <PackageVersion Include="xunit.runner.visualstudio" Version="2.8.2" />
+        <PackageVersion Include="XunitXml.TestLogger" Version="4.1.0" />
     </ItemGroup>
 </Project>

@@ -1,9 +1,9 @@
-﻿using System.Collections.Concurrent;
+﻿using System.Buffers;
+using System.Collections.Concurrent;
 using System.Globalization;
 using System.Text;
 using System.Text.Json;
 using CreativeCoders.Core;
-using CreativeCoders.Net;
 using Microsoft.Extensions.Logging;
 using MQTTnet;
 
@@ -88,7 +88,7 @@ public class MqttValuePublisher : IObserver<SmartMeterValue>
             {
                 Topic = string.Format(_options.TopicTemplate, value.Type),
                 //ContentType = ContentMediaTypes.Application.Json,
-                Payload = Encoding.UTF8.GetBytes(payload)
+                Payload = new ReadOnlySequence<byte>(Encoding.UTF8.GetBytes(payload))
             };
 
             var publishResult = await SendMessageAsync(message);

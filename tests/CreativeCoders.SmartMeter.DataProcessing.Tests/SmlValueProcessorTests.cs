@@ -1,6 +1,6 @@
 ﻿using System.Reactive.Subjects;
 using CreativeCoders.SmartMeter.Sml;
-using FluentAssertions;
+using AwesomeAssertions;
 using Microsoft.Extensions.Time.Testing;
 using Xunit;
 
