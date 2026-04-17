@@ -1,4 +1,5 @@
 ﻿using System.Collections.Concurrent;
+using System.Globalization;
 using System.Text;
 using System.Text.Json;
 using CreativeCoders.Core;
@@ -29,7 +30,17 @@ public class MqttValuePublisher : IObserver<SmartMeterValue>
 
         _publishingQueue = new BlockingCollection<SmartMeterValue>();
 
-        _workerThread = new Thread(DoWork);
+        _workerThread = new Thread(async void () =>
+        {
+            try
+            {
+                await DoWorkAsync();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Error in MqttValuePublisher worker thread");
+            }
+        });
     }
 
     public async Task InitAsync()
@@ -40,6 +51,8 @@ public class MqttValuePublisher : IObserver<SmartMeterValue>
                 .WithConnectionUri(_options.Server)
                 .Build());
 
+        _client.DisconnectedAsync += _ => TryReconnectAsync();
+
         if (connectResult.ResultCode != MqttClientConnectResultCode.Success)
         {
             throw new InvalidOperationException(
@@ -49,22 +62,55 @@ public class MqttValuePublisher : IObserver<SmartMeterValue>
         _workerThread.Start();
     }
 
-    private async void DoWork()
+    private async Task TryReconnectAsync()
+    {
+        _logger.LogWarning("Mqtt client disconnected. Reconnecting...");
+
+        await Task.Delay(1000);
+
+        await _client.ConnectAsync(new MqttClientOptionsBuilder()
+            .WithClientId(_options.ClientName)
+            .WithConnectionUri(_options.Server)
+            .Build());
+    }
+
+    private async Task DoWorkAsync()
     {
         foreach (var value in _publishingQueue.GetConsumingEnumerable())
         {
-            _logger.LogDebug($"Publish value: {value.Type} = {value.Value}");
+            _logger.LogDebug("Publish value: {ValueType} = {Value}", value.Type, value.Value);
 
-            var publishResult = await _client.PublishAsync(
-                new MqttApplicationMessage
-                {
-                    Topic = string.Format(_options.TopicTemplate, value.Type),
-                    ContentType = ContentMediaTypes.Application.Json,
-                    PayloadSegment = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(new { value.Value }))
-                });
+            var payload = value.WriteAsJson
+                ? JsonSerializer.Serialize(new { value.Value })
+                : value.Value.ToString(CultureInfo.InvariantCulture);
 
-            _logger.LogDebug($"Publishing result: {publishResult.ReasonCode}  {publishResult.ReasonString}");
+            var message = new MqttApplicationMessage
+            {
+                Topic = string.Format(_options.TopicTemplate, value.Type),
+                //ContentType = ContentMediaTypes.Application.Json,
+                Payload = Encoding.UTF8.GetBytes(payload)
+            };
+
+            var publishResult = await SendMessageAsync(message);
+
+            _logger.LogDebug("Publishing result: {ReasonCode}  {ReasonString}", publishResult.ReasonCode,
+                publishResult.ReasonString);
         }
+    }
+
+    private async Task<MqttClientPublishResult> SendMessageAsync(MqttApplicationMessage message)
+    {
+        try
+        {
+            return await _client.PublishAsync(message).ConfigureAwait(false);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error sending message");
+        }
+
+        return new MqttClientPublishResult(null, MqttClientPublishReasonCode.UnspecifiedError,
+            "Sending message failed with exception", []);
     }
 
     public void OnCompleted()

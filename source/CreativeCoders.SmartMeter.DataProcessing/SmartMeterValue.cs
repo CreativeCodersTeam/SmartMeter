@@ -8,6 +8,8 @@ public class SmartMeterValue
     }
 
     public SmartMeterValueType Type { get; }
-    
+
     public decimal Value { get; init; }
+
+    public bool WriteAsJson { get; set; } = true;
 }
