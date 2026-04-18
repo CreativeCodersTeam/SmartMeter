@@ -14,7 +14,7 @@ internal static partial class SmlMessageDetectorLog
         Message = "Anchored on SML start escape at buffer offset {Offset}")]
     public static partial void AnchoredOnStart(ILogger logger, int offset);
 
-    [LoggerMessage(EventId = 1003, Level = LogLevel.Information,
+    [LoggerMessage(EventId = 1003, Level = LogLevel.Debug,
         Message = "Detected SML frame: frameLength={FrameLength}, payloadLength={PayloadLength}, crcValid={CrcValid}")]
     public static partial void FrameDetected(ILogger logger, int frameLength, int payloadLength, bool crcValid);
 

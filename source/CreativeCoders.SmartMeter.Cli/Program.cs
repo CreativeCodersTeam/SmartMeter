@@ -70,6 +70,6 @@ internal class SmartMeterConsoleOutput : IObserver<SmartMeterValue>
 
     public void OnNext(SmartMeterValue value)
     {
-        AnsiConsole.WriteLine($"Received value: {value.Type} = {value.Value}");
+        AnsiConsole.WriteLine($"Received value: {value.Type} = {value.Value:N}");
     }
 }

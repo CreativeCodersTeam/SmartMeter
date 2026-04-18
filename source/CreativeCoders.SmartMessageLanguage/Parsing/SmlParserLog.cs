@@ -21,7 +21,7 @@ internal static partial class SmlParserLog
     public static partial void ObisValueParsed(ILogger logger, string obisCode, decimal? value,
         SmlUnit unit, sbyte scaler);
 
-    [LoggerMessage(EventId = 2004, Level = LogLevel.Information,
+    [LoggerMessage(EventId = 2004, Level = LogLevel.Debug,
         Message = "SML parse completed: {ValueCount} OBIS values, {WarningCount} warnings")]
     public static partial void ParseCompleted(ILogger logger, int valueCount, int warningCount);
 

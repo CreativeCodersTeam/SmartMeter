@@ -48,7 +48,7 @@ public class SmlValueProcessorTests
     {
         // Arrange
         var expectedBalanceValue = (smlValueValue2 - smlValueValue1) * 60;
-        if (smlValueType == SmlValueType.SoldEnergy)
+        if (smlValueType == SmlValueType.PurchasedEnergy)
         {
             expectedBalanceValue *= -1;
         }

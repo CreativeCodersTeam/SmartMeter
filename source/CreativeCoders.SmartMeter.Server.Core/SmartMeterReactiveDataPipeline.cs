@@ -6,6 +6,7 @@ using CreativeCoders.SmartMessageLanguage.Parsing;
 using CreativeCoders.SmartMeter.DataProcessing;
 using CreativeCoders.SmartMeter.Sml;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace CreativeCoders.SmartMeter.Server.Core;
 
@@ -19,12 +20,15 @@ public class SmartMeterReactiveDataPipeline : ISmartMeterReactiveDataPipeline
     private readonly ILogger<SmartMeterReactiveDataPipeline> _logger;
     private readonly Subject<SmlValue> _valueSubject = new Subject<SmlValue>();
 
+    private readonly SmartMeterOptions _smartMeterOptions;
+
     public SmartMeterReactiveDataPipeline(ISmlParser smlParser, ISmlMessageDetector smlMessageDetector,
-        ILogger<SmartMeterReactiveDataPipeline> logger)
+        IOptions<SmartMeterOptions> smartMeterOptions, ILogger<SmartMeterReactiveDataPipeline> logger)
     {
         _smlParser = Ensure.NotNull(smlParser);
         _smlMessageDetector = Ensure.NotNull(smlMessageDetector);
         _logger = Ensure.NotNull(logger);
+        _smartMeterOptions = Ensure.NotNull(smartMeterOptions).Value;
 
         _smlMessageDetector.Messages.Subscribe(message =>
         {
@@ -68,6 +72,27 @@ public class SmartMeterReactiveDataPipeline : ISmartMeterReactiveDataPipeline
             }
         });
 
-        return _valueSubject.SelectSmartMeterValues().Subscribe(observer);
+        return _valueSubject.Select(value =>
+            {
+                if (value.ValueType == SmlValueType.PurchasedEnergy)
+                {
+                    return new SmlValue(SmlValueType.PurchasedEnergy)
+                    {
+                        Value = value.Value + _smartMeterOptions.PurchasedEnergyOffset
+                    };
+                }
+
+                if (value.ValueType == SmlValueType.SoldEnergy)
+                {
+                    return new SmlValue(SmlValueType.SoldEnergy)
+                    {
+                        Value = value.Value + _smartMeterOptions.SoldEnergyOffset
+                    };
+                }
+
+                return value;
+            })
+            .SelectSmartMeterValues()
+            .Subscribe(observer);
     }
 }
