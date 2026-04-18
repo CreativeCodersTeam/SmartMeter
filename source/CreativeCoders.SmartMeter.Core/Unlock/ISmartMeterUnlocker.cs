@@ -1,4 +1,4 @@
-namespace CreativeCoders.SmartMeter.Server.Core.Unlock;
+namespace CreativeCoders.SmartMeter.Core.Unlock;
 
 public interface ISmartMeterUnlocker : IDisposable
 {

@@ -1,4 +1,4 @@
-namespace CreativeCoders.SmartMeter.Server.Core.Unlock;
+namespace CreativeCoders.SmartMeter.Core.Unlock;
 
 /// <summary>
 /// Result category of a PIN unlock attempt.

@@ -5,13 +5,10 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="CreativeCoders.Net" />
-      <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
-      <PackageReference Include="MQTTnet" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\CreativeCoders.SmartMeter.Sml\CreativeCoders.SmartMeter.Sml.csproj" />
+        <PackageReference Include="CreativeCoders.Net"/>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions"/>
+        <PackageReference Include="MQTTnet"/>
+        <PackageReference Include="System.Reactive"/>
     </ItemGroup>
 
 </Project>

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        
+
     </PropertyGroup>
 
     <ItemGroup>
@@ -24,7 +24,6 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\source\CreativeCoders.SmartMeter.DataProcessing\CreativeCoders.SmartMeter.DataProcessing.csproj"/>
-        <ProjectReference Include="..\..\source\CreativeCoders.SmartMeter.Sml\CreativeCoders.SmartMeter.Sml.csproj"/>
     </ItemGroup>
 
 </Project>

@@ -1,10 +1,9 @@
 using System.Diagnostics;
 using System.Text;
 using CreativeCoders.Core;
-using CreativeCoders.SmartMeter.Sml.Reactive;
 using Microsoft.Extensions.Logging;
 
-namespace CreativeCoders.SmartMeter.Server.Core.Unlock;
+namespace CreativeCoders.SmartMeter.Core.Unlock;
 
 public sealed class SmartMeterUnlocker(ILogger<SmartMeterUnlocker> logger) : ISmartMeterUnlocker
 {

@@ -1,4 +1,4 @@
-namespace CreativeCoders.SmartMeter.Server.Core.Unlock;
+namespace CreativeCoders.SmartMeter.Core.Unlock;
 
 /// <summary>
 /// Defines how the PIN is transmitted over the optical interface of a smart meter.

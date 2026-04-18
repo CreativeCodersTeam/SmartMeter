@@ -1,5 +1,4 @@
 ﻿using System.Reactive.Subjects;
-using CreativeCoders.SmartMeter.Sml;
 using AwesomeAssertions;
 using Microsoft.Extensions.Time.Testing;
 using Xunit;

@@ -1,10 +1,10 @@
 using CreativeCoders.SmartMessageLanguage;
-using CreativeCoders.SmartMeter.Server.Core.SmlData;
-using CreativeCoders.SmartMeter.Server.Core.Unlock;
+using CreativeCoders.SmartMeter.Core.SmlData;
+using CreativeCoders.SmartMeter.Core.Unlock;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
-namespace CreativeCoders.SmartMeter.Server.Core;
+namespace CreativeCoders.SmartMeter.Core;
 
 public static class SmartMeterServerServiceCollectionExtensions
 {

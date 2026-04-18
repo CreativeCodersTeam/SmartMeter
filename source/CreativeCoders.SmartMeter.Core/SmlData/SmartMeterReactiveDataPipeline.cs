@@ -7,7 +7,7 @@ using CreativeCoders.SmartMeter.DataProcessing;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace CreativeCoders.SmartMeter.Server.Core.SmlData;
+namespace CreativeCoders.SmartMeter.Core.SmlData;
 
 public class SmartMeterReactiveDataPipeline : ISmartMeterReactiveDataPipeline
 {

@@ -1,4 +1,4 @@
-namespace CreativeCoders.SmartMeter.Server.Core.Unlock;
+namespace CreativeCoders.SmartMeter.Core.Unlock;
 
 /// <summary>
 /// Options controlling the PIN unlock procedure for the smart meter's optical

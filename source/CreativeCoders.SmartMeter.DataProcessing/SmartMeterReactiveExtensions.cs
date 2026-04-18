@@ -1,6 +1,4 @@
-﻿using CreativeCoders.SmartMeter.Sml;
-
-namespace CreativeCoders.SmartMeter.DataProcessing;
+﻿namespace CreativeCoders.SmartMeter.DataProcessing;
 
 public static class SmartMeterReactiveExtensions
 {

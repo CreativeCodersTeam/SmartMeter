@@ -2,10 +2,9 @@ using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using CreativeCoders.Core;
 using CreativeCoders.SmartMeter.DataProcessing;
-using CreativeCoders.SmartMeter.Sml.Reactive;
 using Microsoft.Extensions.Logging;
 
-namespace CreativeCoders.SmartMeter.Server.Core.SmlData;
+namespace CreativeCoders.SmartMeter.Core.SmlData;
 
 public sealed class SmartMeterDataProducer(
     ISmartMeterReactiveDataPipeline reactiveDataPipeline,

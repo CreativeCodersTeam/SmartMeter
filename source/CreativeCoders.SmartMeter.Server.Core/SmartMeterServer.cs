@@ -1,7 +1,7 @@
 using CreativeCoders.Core;
 using CreativeCoders.Daemon;
+using CreativeCoders.SmartMeter.Core.SmlData;
 using CreativeCoders.SmartMeter.DataProcessing;
-using CreativeCoders.SmartMeter.Server.Core.SmlData;
 using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;

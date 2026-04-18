@@ -1,7 +1,8 @@
-﻿using CreativeCoders.SmartMeter.DataProcessing;
+﻿using CreativeCoders.SmartMeter.Core;
+using CreativeCoders.SmartMeter.Core.SmlData;
+using CreativeCoders.SmartMeter.Core.Unlock;
+using CreativeCoders.SmartMeter.DataProcessing;
 using CreativeCoders.SmartMeter.Server.Core;
-using CreativeCoders.SmartMeter.Server.Core.SmlData;
-using CreativeCoders.SmartMeter.Server.Core.Unlock;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Spectre.Console;

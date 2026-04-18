@@ -1,4 +1,4 @@
-namespace CreativeCoders.SmartMeter.Server.Core.Unlock;
+namespace CreativeCoders.SmartMeter.Core.Unlock;
 
 /// <summary>
 /// Structured result of a PIN unlock attempt on the smart meter.

@@ -1,6 +1,6 @@
 using CreativeCoders.Core;
 
-namespace CreativeCoders.SmartMeter.Server.Core.Unlock;
+namespace CreativeCoders.SmartMeter.Core.Unlock;
 
 /// <summary>
 /// Searches raw SML byte streams for occurrences of 6-byte OBIS identifiers
@@ -30,7 +30,8 @@ internal static class ObisCodeScanner
 
         if (cde.Length != 3)
         {
-            throw new FormatException($"Invalid OBIS code '{obis}'. Expected three dot-separated values between ':' and '*'.");
+            throw new FormatException(
+                $"Invalid OBIS code '{obis}'. Expected three dot-separated values between ':' and '*'.");
         }
 
         var c = byte.Parse(cde[0]);

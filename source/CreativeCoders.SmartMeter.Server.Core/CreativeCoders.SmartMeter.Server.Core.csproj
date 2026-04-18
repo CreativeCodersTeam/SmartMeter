@@ -12,6 +12,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\CreativeCoders.SmartMessageLanguage\CreativeCoders.SmartMessageLanguage.csproj"/>
+        <ProjectReference Include="..\CreativeCoders.SmartMeter.Core\CreativeCoders.SmartMeter.Core.csproj"/>
         <ProjectReference Include="..\CreativeCoders.SmartMeter.DataProcessing\CreativeCoders.SmartMeter.DataProcessing.csproj"/>
     </ItemGroup>
 

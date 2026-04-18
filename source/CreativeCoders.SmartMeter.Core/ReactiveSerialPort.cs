@@ -2,7 +2,7 @@
 using System.Reactive.Linq;
 using CreativeCoders.Core;
 
-namespace CreativeCoders.SmartMeter.Sml.Reactive;
+namespace CreativeCoders.SmartMeter.Core;
 
 public sealed class ReactiveSerialPort : IObservable<byte[]>, IDisposable
 {

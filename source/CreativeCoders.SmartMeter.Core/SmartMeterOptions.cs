@@ -1,4 +1,4 @@
-namespace CreativeCoders.SmartMeter.Server.Core;
+namespace CreativeCoders.SmartMeter.Core;
 
 public class SmartMeterOptions
 {
