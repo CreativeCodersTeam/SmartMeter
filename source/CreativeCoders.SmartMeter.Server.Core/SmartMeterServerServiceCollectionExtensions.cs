@@ -1,0 +1,16 @@
+using CreativeCoders.SmartMessageLanguage;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+
+namespace CreativeCoders.SmartMeter.Server.Core;
+
+public static class SmartMeterServerServiceCollectionExtensions
+{
+    public static IServiceCollection AddSmartMeterServer(this IServiceCollection services)
+    {
+        services.AddSml();
+        services.TryAddSingleton<ISmartMeterReactiveDataPipeline, SmartMeterReactiveDataPipeline>();
+
+        return services;
+    }
+}

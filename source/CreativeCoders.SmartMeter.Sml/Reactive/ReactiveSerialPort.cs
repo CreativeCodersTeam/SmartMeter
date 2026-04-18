@@ -48,6 +48,8 @@ public sealed class ReactiveSerialPort : IObservable<byte[]>, IDisposable
         return buffer.Take(bytesRead);
     }
 
+    public bool IsOpen => _serialPort.IsOpen;
+
     public void Open()
     {
         _serialPort.Open();
@@ -56,6 +58,13 @@ public sealed class ReactiveSerialPort : IObservable<byte[]>, IDisposable
     public void Close()
     {
         _serialPort.Close();
+    }
+
+    public void Write(byte[] data)
+    {
+        Ensure.NotNull(data);
+
+        _serialPort.Write(data, 0, data.Length);
     }
 
     public void Dispose()

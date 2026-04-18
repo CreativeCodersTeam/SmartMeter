@@ -1,5 +1,6 @@
 ﻿using CreativeCoders.SmartMeter.DataProcessing;
 using CreativeCoders.SmartMeter.Server.Core;
+using CreativeCoders.SmartMeter.Server.Core.Unlock;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Spectre.Console;
@@ -19,9 +20,21 @@ class Program
                 options.TimestampFormat = "hh:mm:ss ";
             }))
             .AddSingleton<ISmartMeterDataProducer, SmartMeterDataProducer>()
+            .AddSmartMeterServer()
             .BuildServiceProvider();
 
         var dataProducer = sp.GetRequiredService<ISmartMeterDataProducer>();
+
+        if (args.Length > 1 && args[0].Equals("unlock", StringComparison.OrdinalIgnoreCase))
+        {
+            AnsiConsole.WriteLine("Unlocking Smart Meter with provided PIN...");
+
+            var pin = args[1];
+
+            await SendPinAsync(dataProducer, pin);
+
+            return;
+        }
 
         await dataProducer.StartAsync(new SmartMeterConsoleOutput());
 
@@ -31,6 +44,15 @@ class Program
         await dataProducer.StopAsync();
 
         AnsiConsole.WriteLine("Smart Meter CLI stopped");
+    }
+
+    private static async Task SendPinAsync(ISmartMeterDataProducer dataProducer, string pin)
+    {
+        AnsiConsole.WriteLine($"Sending PIN: {pin}");
+        await dataProducer.UnlockAsync(pin, new SmartMeterUnlockOptions
+        {
+            Strategy = SmartMeterPinStrategy.EmhAsciiBlock
+        });
     }
 }
 
