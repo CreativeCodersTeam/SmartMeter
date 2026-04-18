@@ -10,7 +10,7 @@ namespace CreativeCoders.SmartMessageLanguage.Tlv;
 /// </remarks>
 public readonly ref struct SmlTlvElement
 {
-    internal SmlTlvElement(SmlValueType type, int listLength, ReadOnlySpan<byte> raw)
+    internal SmlTlvElement(SmlMessageValueType type, int listLength, ReadOnlySpan<byte> raw)
     {
         Type = type;
         ListLength = listLength;
@@ -18,19 +18,19 @@ public readonly ref struct SmlTlvElement
     }
 
     /// <summary>The TLV primitive or structural type.</summary>
-    public SmlValueType Type { get; }
+    public SmlMessageValueType Type { get; }
 
-    /// <summary>Declared number of entries when <see cref="Type"/> is <see cref="SmlValueType.List"/>.</summary>
+    /// <summary>Declared number of entries when <see cref="Type"/> is <see cref="SmlMessageValueType.List"/>.</summary>
     public int ListLength { get; }
 
     /// <summary>
-    /// Raw payload bytes for primitive elements (empty for <see cref="SmlValueType.List"/>
-    /// and <see cref="SmlValueType.EndOfMessage"/>).
+    /// Raw payload bytes for primitive elements (empty for <see cref="SmlMessageValueType.List"/>
+    /// and <see cref="SmlMessageValueType.EndOfMessage"/>).
     /// </summary>
     public ReadOnlySpan<byte> Raw { get; }
 
     /// <summary><c>true</c> if this element is the end-of-message marker (<c>0x00</c>).</summary>
-    public bool IsEndOfMessage => Type == SmlValueType.EndOfMessage;
+    public bool IsEndOfMessage => Type == SmlMessageValueType.EndOfMessage;
 
     /// <summary>Parses <see cref="Raw"/> as a big-endian unsigned integer (1-8 bytes).</summary>
     public ulong GetUInt64()

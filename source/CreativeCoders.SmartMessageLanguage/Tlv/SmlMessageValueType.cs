@@ -9,7 +9,7 @@ namespace CreativeCoders.SmartMessageLanguage.Tlv;
 /// the same wire nibble (<c>0x0</c>) as an octet string. The reader discriminates on
 /// the full first byte when deciding which enum value to assign.
 /// </remarks>
-public enum SmlValueType
+public enum SmlMessageValueType
 {
     /// <summary>End-of-message marker (single <c>0x00</c> byte).</summary>
     EndOfMessage = 0,

@@ -1,8 +1,10 @@
-namespace CreativeCoders.SmartMeter.Sml;
+// namespace CreativeCoders.SmartMeter.Sml;
+//
+// public enum SmlReadDataMode
+// {
+//     WaitForBegin,
+//     InData,
+//     ReadDataEnd
+// }
 
-public enum SmlReadDataMode
-{
-    WaitForBegin,
-    InData,
-    ReadDataEnd
-}
+

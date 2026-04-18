@@ -18,4 +18,4 @@ public sealed record ObisValue(
     SmlUnit Unit,
     sbyte Scaler,
     byte[] RawValue,
-    SmlValueType RawType);
+    SmlMessageValueType RawType);

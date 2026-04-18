@@ -60,7 +60,7 @@ public sealed class SmlParser : ISmlParser
                 continue;
             }
 
-            if (element.Type != SmlValueType.List)
+            if (element.Type != SmlMessageValueType.List)
             {
                 // Top level must be a sequence of messages (lists); anything else is stray.
                 var message = $"Unexpected top-level TLV type {element.Type}";
@@ -102,7 +102,7 @@ public sealed class SmlParser : ISmlParser
         }
 
         // Field 4: messageBody list.
-        if (!reader.Read() || reader.Current.Type != SmlValueType.List || reader.Current.ListLength != 2)
+        if (!reader.Read() || reader.Current.Type != SmlMessageValueType.List || reader.Current.ListLength != 2)
         {
             warnings.Add("Malformed SML_Message body wrapper");
             SkipListEntries(ref reader, 2);
@@ -110,7 +110,7 @@ public sealed class SmlParser : ISmlParser
             return;
         }
 
-        if (!reader.Read() || reader.Current.Type != SmlValueType.Unsigned)
+        if (!reader.Read() || reader.Current.Type != SmlMessageValueType.Unsigned)
         {
             warnings.Add("Missing messageBody type tag");
             SkipListEntries(ref reader, 3);
@@ -125,7 +125,7 @@ public sealed class SmlParser : ISmlParser
             return;
         }
 
-        if (messageBodyType == GetListResponseId && reader.Current.Type == SmlValueType.List)
+        if (messageBodyType == GetListResponseId && reader.Current.Type == SmlMessageValueType.List)
         {
             SmlParserLog.GetListResponseFound(_logger, reader.Current.ListLength);
             ProcessGetListResponse(ref reader, reader.Current.ListLength, values, warnings);
@@ -177,7 +177,7 @@ public sealed class SmlParser : ISmlParser
             return;
         }
 
-        if (reader.Current.Type == SmlValueType.List)
+        if (reader.Current.Type == SmlMessageValueType.List)
         {
             var listCount = reader.Current.ListLength;
 
@@ -190,7 +190,7 @@ public sealed class SmlParser : ISmlParser
         {
             // valList is OPTIONAL; a missing list is encoded as an empty octet string.
             // Any other type is surprising.
-            if (reader.Current.Type != SmlValueType.OctetString)
+            if (reader.Current.Type != SmlMessageValueType.OctetString)
             {
                 warnings.Add($"Unexpected valList type {reader.Current.Type}");
                 SmlParserLog.UnexpectedTlvType(_logger, reader.Current.Type, "valList");
@@ -214,7 +214,7 @@ public sealed class SmlParser : ISmlParser
     {
         // SML_ListEntry = List of 7: objName (OctetString), status, valTime,
         //                            unit (Unsigned8), scaler (Integer8), value, valueSignature.
-        if (!reader.Read() || reader.Current.Type != SmlValueType.List)
+        if (!reader.Read() || reader.Current.Type != SmlMessageValueType.List)
         {
             warnings.Add("valList entry is not a list");
 
@@ -232,7 +232,7 @@ public sealed class SmlParser : ISmlParser
         }
 
         // objName
-        if (!reader.Read() || reader.Current.Type != SmlValueType.OctetString)
+        if (!reader.Read() || reader.Current.Type != SmlMessageValueType.OctetString)
         {
             warnings.Add("valList entry missing objName");
             SkipListEntries(ref reader, entryCount - 1);
@@ -261,7 +261,7 @@ public sealed class SmlParser : ISmlParser
 
         var unit = SmlUnit.Unknown;
 
-        if (reader.Current.Type == SmlValueType.Unsigned)
+        if (reader.Current.Type == SmlMessageValueType.Unsigned)
         {
             var unitCode = (byte)reader.Current.GetUInt64();
             unit = Enum.IsDefined((SmlUnit)unitCode) ? (SmlUnit)unitCode : SmlUnit.Unknown;
@@ -281,7 +281,7 @@ public sealed class SmlParser : ISmlParser
 
         sbyte scaler = 0;
 
-        if (reader.Current.Type == SmlValueType.Integer)
+        if (reader.Current.Type == SmlMessageValueType.Integer)
         {
             scaler = (sbyte)reader.Current.GetInt64();
         }
@@ -316,13 +316,13 @@ public sealed class SmlParser : ISmlParser
     {
         switch (value.Type)
         {
-            case SmlValueType.Unsigned:
+            case SmlMessageValueType.Unsigned:
                 return ApplyScaler(value.GetUInt64(), scaler);
-            case SmlValueType.Integer:
+            case SmlMessageValueType.Integer:
                 return ApplyScaler(value.GetInt64(), scaler);
-            case SmlValueType.Boolean:
+            case SmlMessageValueType.Boolean:
                 return value.GetBool() ? 1m : 0m;
-            case SmlValueType.OctetString:
+            case SmlMessageValueType.OctetString:
                 // Non-numeric (e.g. server ID as octet string); caller can read RawValue.
                 return null;
             default:

@@ -15,7 +15,7 @@ public class SmlTlvReaderTests
         var reader = new SmlTlvReader(data);
         reader.Read().Should().BeTrue();
 
-        reader.Current.Type.Should().Be(SmlValueType.OctetString);
+        reader.Current.Type.Should().Be(SmlMessageValueType.OctetString);
         reader.Current.Raw.ToArray().Should().Equal(0xDE, 0xAD, 0xBE);
     }
 
@@ -28,7 +28,7 @@ public class SmlTlvReaderTests
         var reader = new SmlTlvReader(data);
         reader.Read().Should().BeTrue();
 
-        reader.Current.Type.Should().Be(SmlValueType.Unsigned);
+        reader.Current.Type.Should().Be(SmlMessageValueType.Unsigned);
         reader.Current.GetUInt64().Should().Be(0x0102UL);
     }
 
@@ -41,7 +41,7 @@ public class SmlTlvReaderTests
         var reader = new SmlTlvReader(data);
         reader.Read().Should().BeTrue();
 
-        reader.Current.Type.Should().Be(SmlValueType.Integer);
+        reader.Current.Type.Should().Be(SmlMessageValueType.Integer);
         reader.Current.GetInt64().Should().Be(-1);
     }
 
@@ -53,7 +53,7 @@ public class SmlTlvReaderTests
         var reader = new SmlTlvReader(data);
         reader.Read().Should().BeTrue();
 
-        reader.Current.Type.Should().Be(SmlValueType.Boolean);
+        reader.Current.Type.Should().Be(SmlMessageValueType.Boolean);
         reader.Current.GetBool().Should().BeTrue();
     }
 
@@ -65,7 +65,7 @@ public class SmlTlvReaderTests
 
         var reader = new SmlTlvReader(data);
         reader.Read().Should().BeTrue();
-        reader.Current.Type.Should().Be(SmlValueType.List);
+        reader.Current.Type.Should().Be(SmlMessageValueType.List);
         reader.Current.ListLength.Should().Be(2);
 
         reader.Read().Should().BeTrue();
@@ -99,7 +99,7 @@ public class SmlTlvReaderTests
         var reader = new SmlTlvReader(data);
         reader.Read().Should().BeTrue();
 
-        reader.Current.Type.Should().Be(SmlValueType.OctetString);
+        reader.Current.Type.Should().Be(SmlMessageValueType.OctetString);
         reader.Current.Raw.Length.Should().Be(16);
     }
 
@@ -115,7 +115,7 @@ public class SmlTlvReaderTests
 
         var reader = new SmlTlvReader(data);
         reader.Read().Should().BeTrue();
-        reader.Current.Type.Should().Be(SmlValueType.List);
+        reader.Current.Type.Should().Be(SmlMessageValueType.List);
         reader.SkipCurrent();
 
         reader.Read().Should().BeTrue();

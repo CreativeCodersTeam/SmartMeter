@@ -47,7 +47,7 @@ public ref struct SmlTlvReader
         if (first == 0x00)
         {
             _position++;
-            _current = new SmlTlvElement(SmlValueType.EndOfMessage, 0, ReadOnlySpan<byte>.Empty);
+            _current = new SmlTlvElement(SmlMessageValueType.EndOfMessage, 0, ReadOnlySpan<byte>.Empty);
 
             return true;
         }
@@ -79,7 +79,7 @@ public ref struct SmlTlvReader
             {
                 // For lists, the 'length' encodes the number of child elements, not a byte count.
                 _position += headerLength;
-                _current = new SmlTlvElement(SmlValueType.List, length, ReadOnlySpan<byte>.Empty);
+                _current = new SmlTlvElement(SmlMessageValueType.List, length, ReadOnlySpan<byte>.Empty);
 
                 return true;
             }
@@ -90,10 +90,10 @@ public ref struct SmlTlvReader
             {
                 var resolvedType = typeNibble switch
                 {
-                    0x0 => SmlValueType.OctetString,
-                    0x4 => SmlValueType.Boolean,
-                    0x5 => SmlValueType.Integer,
-                    _ => SmlValueType.Unsigned
+                    0x0 => SmlMessageValueType.OctetString,
+                    0x4 => SmlMessageValueType.Boolean,
+                    0x5 => SmlMessageValueType.Integer,
+                    _ => SmlMessageValueType.Unsigned
                 };
 
                 // Declared length includes the header byte(s); payload length is length - header.
@@ -121,7 +121,7 @@ public ref struct SmlTlvReader
     /// </summary>
     public void SkipCurrent()
     {
-        if (_current.Type != SmlValueType.List)
+        if (_current.Type != SmlMessageValueType.List)
         {
             // Primitives have already been fully consumed by Read().
             return;

@@ -31,11 +31,11 @@ internal static partial class SmlParserLog
 
     [LoggerMessage(EventId = 2011, Level = LogLevel.Warning,
         Message = "Unexpected SML TLV type {TlvType} ({Context})")]
-    public static partial void UnexpectedTlvType(ILogger logger, SmlValueType tlvType, string context);
+    public static partial void UnexpectedTlvType(ILogger logger, SmlMessageValueType tlvType, string context);
 
     [LoggerMessage(EventId = 2012, Level = LogLevel.Warning,
         Message = "Unsupported SML value type {TlvType} for OBIS {ObisCode}")]
-    public static partial void UnsupportedValueType(ILogger logger, SmlValueType tlvType, string obisCode);
+    public static partial void UnsupportedValueType(ILogger logger, SmlMessageValueType tlvType, string obisCode);
 
     [LoggerMessage(EventId = 2020, Level = LogLevel.Error,
         Message = "Malformed SML envelope: {Reason}")]

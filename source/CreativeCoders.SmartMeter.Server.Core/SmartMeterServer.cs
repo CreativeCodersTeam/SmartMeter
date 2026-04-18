@@ -1,10 +1,7 @@
-using System.Reactive.Concurrency;
-using System.Reactive.Linq;
 using CreativeCoders.Core;
 using CreativeCoders.Daemon;
 using CreativeCoders.SmartMeter.DataProcessing;
 using CreativeCoders.SmartMeter.Server.Core.SmlData;
-using CreativeCoders.SmartMeter.Sml.Reactive;
 using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -23,8 +20,6 @@ public class SmartMeterServer(
     private readonly ILoggerFactory _loggerFactory = Ensure.NotNull(loggerFactory);
     private readonly ILogger<SmartMeterServer> _logger = Ensure.NotNull(logger);
     private readonly MqttPublisherOptions _mqttPublisherOptions = mqttPublisherOptions.Value;
-
-    private IDisposable? _subscription;
 
     public async Task StartAsync()
     {

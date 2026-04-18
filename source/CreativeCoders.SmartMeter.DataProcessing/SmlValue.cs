@@ -1,4 +1,4 @@
-namespace CreativeCoders.SmartMeter.Sml;
+namespace CreativeCoders.SmartMeter.DataProcessing;
 
 public class SmlValue
 {

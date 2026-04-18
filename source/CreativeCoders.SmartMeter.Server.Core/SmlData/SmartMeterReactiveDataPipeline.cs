@@ -4,7 +4,6 @@ using CreativeCoders.Core;
 using CreativeCoders.SmartMessageLanguage.Framing;
 using CreativeCoders.SmartMessageLanguage.Parsing;
 using CreativeCoders.SmartMeter.DataProcessing;
-using CreativeCoders.SmartMeter.Sml;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
