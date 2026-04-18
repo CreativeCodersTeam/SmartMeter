@@ -1,4 +1,5 @@
 using CreativeCoders.SmartMessageLanguage;
+using CreativeCoders.SmartMeter.Server.Core.SmlData;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 

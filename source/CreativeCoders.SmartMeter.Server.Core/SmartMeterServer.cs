@@ -3,6 +3,7 @@ using System.Reactive.Linq;
 using CreativeCoders.Core;
 using CreativeCoders.Daemon;
 using CreativeCoders.SmartMeter.DataProcessing;
+using CreativeCoders.SmartMeter.Server.Core.SmlData;
 using CreativeCoders.SmartMeter.Sml.Reactive;
 using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;

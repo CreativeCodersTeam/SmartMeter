@@ -1,7 +1,7 @@
 using CreativeCoders.SmartMeter.DataProcessing;
 using CreativeCoders.SmartMeter.Server.Core.Unlock;
 
-namespace CreativeCoders.SmartMeter.Server.Core;
+namespace CreativeCoders.SmartMeter.Server.Core.SmlData;
 
 public interface ISmartMeterDataProducer : IDisposable
 {
