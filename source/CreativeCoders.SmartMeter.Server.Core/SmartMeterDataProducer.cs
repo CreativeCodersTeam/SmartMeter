@@ -121,11 +121,11 @@ public class SmartMeterDataProducer(
             {
                 await SendPinAsync(pin, options, cancellationToken).ConfigureAwait(false);
             }
-            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+            catch (OperationCanceledException ex) when (cancellationToken.IsCancellationRequested)
             {
                 verificationSubscription?.Dispose();
 
-                _logger.LogWarning("Unlock cancelled while sending PIN");
+                _logger.LogWarning(ex, "Unlock cancelled while sending PIN");
 
                 return new SmartMeterUnlockResult(
                     false, SmartMeterUnlockOutcome.Cancelled, [], stopwatch.Elapsed, "Cancelled");
@@ -156,7 +156,7 @@ public class SmartMeterDataProducer(
             using var timeoutCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
             timeoutCts.CancelAfter(options.VerificationTimeout);
 
-            using var _ = timeoutCts.Token.Register(() => verificationTcs.TrySetResult(false));
+            await using var _ = timeoutCts.Token.Register(() => verificationTcs.TrySetResult(false));
 
             var verified = await verificationTcs.Task.ConfigureAwait(false);
 
@@ -193,9 +193,9 @@ public class SmartMeterDataProducer(
                 false, SmartMeterUnlockOutcome.VerificationTimeout, detected.ToArray(), stopwatch.Elapsed,
                 "Verification timeout");
         }
-        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        catch (OperationCanceledException ex) when (cancellationToken.IsCancellationRequested)
         {
-            _logger.LogWarning("Unlock cancelled");
+            _logger.LogWarning(ex, "Unlock cancelled");
 
             return new SmartMeterUnlockResult(
                 false, SmartMeterUnlockOutcome.Cancelled, [], stopwatch.Elapsed, "Cancelled");

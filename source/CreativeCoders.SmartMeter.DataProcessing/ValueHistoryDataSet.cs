@@ -3,14 +3,9 @@ using CreativeCoders.SmartMeter.Sml;
 
 namespace CreativeCoders.SmartMeter.DataProcessing;
 
-public class ValueHistoryDataSet
+public class ValueHistoryDataSet(SmlValue value)
 {
-    public ValueHistoryDataSet(SmlValue value)
-    {
-        Value = Ensure.NotNull(value);
-    }
-
     public DateTimeOffset TimeStamp { get; init; }
 
-    public SmlValue Value { get; }
+    public SmlValue Value { get; } = Ensure.NotNull(value);
 }
