@@ -19,9 +19,9 @@ public class SmlMessageDetectorLoggingTests
         using var detector = new SmlMessageDetector(logger);
         detector.Append(frameBytes);
 
-        // Anchor (Debug, 1002) + FrameDetected (Information, 1003) both appear once.
+        // Anchor (Debug, 1002) + FrameDetected (Debug, 1003) both appear once.
         LoggerCallAssertions.CountCalls(logger, LogLevel.Debug, 1002).Should().Be(1);
-        LoggerCallAssertions.CountCalls(logger, LogLevel.Information, 1003).Should().Be(1);
+        LoggerCallAssertions.CountCalls(logger, LogLevel.Debug, 1003).Should().Be(1);
         LoggerCallAssertions.CountCalls(logger, LogLevel.Warning).Should().Be(0);
     }
 

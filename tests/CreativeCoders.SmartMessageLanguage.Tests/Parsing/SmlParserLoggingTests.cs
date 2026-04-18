@@ -23,7 +23,7 @@ public class SmlParserLoggingTests
         LoggerCallAssertions.CountCalls(logger, LogLevel.Debug, 2001).Should().Be(1);
         LoggerCallAssertions.CountCalls(logger, LogLevel.Debug, 2002).Should().Be(1);
         LoggerCallAssertions.CountCalls(logger, LogLevel.Debug, 2003).Should().Be(2);
-        LoggerCallAssertions.CountCalls(logger, LogLevel.Information, 2004).Should().Be(1);
+        LoggerCallAssertions.CountCalls(logger, LogLevel.Debug, 2004).Should().Be(1);
         LoggerCallAssertions.CountCalls(logger, LogLevel.Warning).Should().Be(0);
         LoggerCallAssertions.CountCalls(logger, LogLevel.Error).Should().Be(0);
     }
