@@ -1,5 +1,6 @@
 using CreativeCoders.SmartMessageLanguage;
 using CreativeCoders.SmartMeter.Server.Core.SmlData;
+using CreativeCoders.SmartMeter.Server.Core.Unlock;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
@@ -11,6 +12,7 @@ public static class SmartMeterServerServiceCollectionExtensions
     {
         services.AddSml();
         services.TryAddSingleton<ISmartMeterReactiveDataPipeline, SmartMeterReactiveDataPipeline>();
+        services.TryAddSingleton<ISmartMeterUnlocker, SmartMeterUnlocker>();
 
         return services;
     }

@@ -31,8 +31,9 @@ class Program
             AnsiConsole.WriteLine("Unlocking Smart Meter with provided PIN...");
 
             var pin = args[1];
+            var unlocker = sp.GetRequiredService<ISmartMeterUnlocker>();
 
-            await SendPinAsync(dataProducer, pin);
+            await SendPinAsync(unlocker, pin);
 
             return;
         }
@@ -47,10 +48,10 @@ class Program
         AnsiConsole.WriteLine("Smart Meter CLI stopped");
     }
 
-    private static async Task SendPinAsync(ISmartMeterDataProducer dataProducer, string pin)
+    private static async Task SendPinAsync(ISmartMeterUnlocker unlocker, string pin)
     {
         AnsiConsole.WriteLine($"Sending PIN: {pin}");
-        await dataProducer.UnlockAsync(pin, new SmartMeterUnlockOptions
+        await unlocker.UnlockAsync(pin, new SmartMeterUnlockOptions
         {
             Strategy = SmartMeterPinStrategy.EmhAsciiBlock
         });
