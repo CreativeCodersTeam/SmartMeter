@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 
 namespace CreativeCoders.SmartMeter.Server.Core;
 
-public class SmartMeterDataProducer(
+public sealed class SmartMeterDataProducer(
     ISmartMeterReactiveDataPipeline reactiveDataPipeline,
     ILogger<SmartMeterDataProducer> logger) : ISmartMeterDataProducer
 {
@@ -310,5 +310,21 @@ public class SmartMeterDataProducer(
                 _onHit(code, false);
             }
         }
+    }
+
+    public void Dispose()
+    {
+        _serialPort.Dispose();
+
+        if (_subscription == null)
+        {
+            return;
+        }
+
+        _logger.LogDebug("Disposing subscription...");
+        _subscription.Dispose();
+        _logger.LogDebug("Subscription disposed");
+
+        _subscription = null;
     }
 }

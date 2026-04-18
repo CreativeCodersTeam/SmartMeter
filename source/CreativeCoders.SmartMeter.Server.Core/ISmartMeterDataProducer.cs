@@ -3,7 +3,7 @@ using CreativeCoders.SmartMeter.Server.Core.Unlock;
 
 namespace CreativeCoders.SmartMeter.Server.Core;
 
-public interface ISmartMeterDataProducer
+public interface ISmartMeterDataProducer : IDisposable
 {
     Task StartAsync(IObserver<SmartMeterValue> observer);
 

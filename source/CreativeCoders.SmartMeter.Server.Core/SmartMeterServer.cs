@@ -14,38 +14,16 @@ namespace CreativeCoders.SmartMeter.Server.Core;
 public class SmartMeterServer(
     ILogger<SmartMeterServer> logger,
     IOptions<MqttPublisherOptions> mqttPublisherOptions,
-    ILoggerFactory loggerFactory)
+    ILoggerFactory loggerFactory,
+    ISmartMeterDataProducer smartMeterDataProducer)
     : IDaemonService
 {
+    private readonly ISmartMeterDataProducer _smartMeterDataProducer = Ensure.NotNull(smartMeterDataProducer);
     private readonly ILoggerFactory _loggerFactory = Ensure.NotNull(loggerFactory);
     private readonly ILogger<SmartMeterServer> _logger = Ensure.NotNull(logger);
     private readonly MqttPublisherOptions _mqttPublisherOptions = mqttPublisherOptions.Value;
-    private readonly ReactiveSerialPort _serialPort = new ReactiveSerialPort("/dev/ttyUSB0");
 
     private IDisposable? _subscription;
-
-    private void CloseSerialPort()
-    {
-        _logger.LogInformation("Closing serial port...");
-        _serialPort.Close();
-        _logger.LogInformation("Serial port closed");
-    }
-
-    private void DisposingSubscription()
-    {
-        if (_subscription == null)
-        {
-            return;
-        }
-
-        _logger.LogInformation("Disposing subscription...");
-
-        _subscription.Dispose();
-
-        _logger.LogInformation("Subscription disposed");
-
-        _subscription = null;
-    }
 
     public async Task StartAsync()
     {
@@ -56,26 +34,15 @@ public class SmartMeterServer(
 
         await mqttValuePublisher.InitAsync();
 
-        _subscription ??= _serialPort
-            .SelectSmlMessages()
-            .SelectSmlValues()
-            .SelectSmartMeterValues()
-            .SubscribeOn(new TaskPoolScheduler(new TaskFactory()))
-            .Subscribe(mqttValuePublisher);
-
-        _serialPort.Open();
+        await _smartMeterDataProducer.StartAsync(mqttValuePublisher);
     }
 
-    public Task StopAsync()
+    public async Task StopAsync()
     {
         _logger.LogInformation("Stopping SmartMeter server");
 
-        DisposingSubscription();
-
-        CloseSerialPort();
+        await _smartMeterDataProducer.StopAsync();
 
         _logger.LogInformation("SmartMeter server stopped");
-
-        return Task.CompletedTask;
     }
 }
