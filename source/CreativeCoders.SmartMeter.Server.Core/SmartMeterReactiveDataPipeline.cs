@@ -1,18 +1,23 @@
 using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using CreativeCoders.Core;
-using CreativeCoders.Core.Weak;
 using CreativeCoders.SmartMessageLanguage.Framing;
 using CreativeCoders.SmartMessageLanguage.Parsing;
 using CreativeCoders.SmartMeter.DataProcessing;
+using CreativeCoders.SmartMeter.Sml;
 using Microsoft.Extensions.Logging;
 
 namespace CreativeCoders.SmartMeter.Server.Core;
 
 public class SmartMeterReactiveDataPipeline : ISmartMeterReactiveDataPipeline
 {
+    private const string ObisCodeEnergyActiveImport = "1-0:1.8.0";
+    private const string ObisCodeEnergyActiveExport = "1-0:2.8.0";
+
     private readonly ISmlParser _smlParser;
     private readonly ISmlMessageDetector _smlMessageDetector;
     private readonly ILogger<SmartMeterReactiveDataPipeline> _logger;
+    private readonly Subject<SmlValue> _valueSubject = new Subject<SmlValue>();
 
     public SmartMeterReactiveDataPipeline(ISmlParser smlParser, ISmlMessageDetector smlMessageDetector,
         ILogger<SmartMeterReactiveDataPipeline> logger)
@@ -23,7 +28,7 @@ public class SmartMeterReactiveDataPipeline : ISmartMeterReactiveDataPipeline
 
         _smlMessageDetector.Messages.Subscribe(message =>
         {
-            _logger.LogInformation("SML message detected. Length: {Length}", message.PayloadBytes.Length);
+            _logger.LogDebug("SML message detected. Length: {Length}", message.PayloadBytes.Length);
         });
     }
 
@@ -39,8 +44,6 @@ public class SmartMeterReactiveDataPipeline : ISmartMeterReactiveDataPipeline
 
     public void OnNext(byte[] value)
     {
-        _logger.LogInformation("Received data. Length: {Length}", value.Length);
-
         _smlMessageDetector.Append(value);
     }
 
@@ -48,14 +51,23 @@ public class SmartMeterReactiveDataPipeline : ISmartMeterReactiveDataPipeline
     {
         _smlMessageDetector.Messages.Select(message => _smlParser.Parse(message.PayloadBytes)).Subscribe(smlMessage =>
         {
-            _logger.LogInformation("Parsed SML message. Values count: {Count}", smlMessage.Values.Count);
+            _logger.LogDebug("Parsed SML message. Values count: {Count}", smlMessage.Values.Count);
 
-            foreach (var value in smlMessage.Values)
+            foreach (var value in smlMessage.Values.Where(v => v.Value.HasValue))
             {
-                _logger.LogInformation("Publishing value. Obis: {Obis}, Value: {Value}", value.ObisCode, value.Value);
+                if (value.ObisCode.StartsWith(ObisCodeEnergyActiveImport))
+                {
+                    _valueSubject.OnNext(new SmlValue(SmlValueType.PurchasedEnergy)
+                        { Value = value.Value!.Value });
+                }
+                else if (value.ObisCode.StartsWith(ObisCodeEnergyActiveExport))
+                {
+                    _valueSubject.OnNext(new SmlValue(SmlValueType.SoldEnergy)
+                        { Value = value.Value!.Value });
+                }
             }
         });
 
-        return new NullDisposable();
+        return _valueSubject.SelectSmartMeterValues().Subscribe(observer);
     }
 }
