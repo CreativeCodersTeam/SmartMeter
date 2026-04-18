@@ -1,5 +1,6 @@
 ﻿using System.Reactive.Linq;
 using System.Reactive.Subjects;
+using CreativeCoders.SmartMeter.DataProcessing.History;
 using CreativeCoders.SmartMeter.Sml;
 
 namespace CreativeCoders.SmartMeter.DataProcessing;

@@ -1,7 +1,6 @@
 ﻿using System.Collections.Concurrent;
-using CreativeCoders.SmartMeter.Sml;
 
-namespace CreativeCoders.SmartMeter.DataProcessing;
+namespace CreativeCoders.SmartMeter.DataProcessing.History;
 
 public class ValueHistory
 {

@@ -1,7 +1,6 @@
 ﻿using CreativeCoders.Core;
-using CreativeCoders.SmartMeter.Sml;
 
-namespace CreativeCoders.SmartMeter.DataProcessing;
+namespace CreativeCoders.SmartMeter.DataProcessing.History;
 
 public class ValueHistoryDataSet(SmlValue value)
 {
