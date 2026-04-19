@@ -49,6 +49,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ci", "ci", "{65B0A31B-BCDB-
 		.github\workflows\sync-ai-config.yml = .github\workflows\sync-ai-config.yml
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{0313FF7A-1065-4C2C-8E8F-53014EB7D314}"
+	ProjectSection(SolutionItems) = preProject
+		build.cmd = build.cmd
+		build.ps1 = build.ps1
+		build.sh = build.sh
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -114,5 +121,6 @@ Global
 		{3DA3A6E4-BC76-4465-AB2E-BE571D7A9B5A} = {675F198B-B173-421F-A53B-F7B98C8D0E4F}
 		{ECD46CF5-A11F-46C9-B274-475F950F10E2} = {AEAE0BA3-481C-45C3-825C-71A5CE7F6A78}
 		{65B0A31B-BCDB-4768-890F-ED46A4773182} = {AEAE0BA3-481C-45C3-825C-71A5CE7F6A78}
+		{0313FF7A-1065-4C2C-8E8F-53014EB7D314} = {AEAE0BA3-481C-45C3-825C-71A5CE7F6A78}
 	EndGlobalSection
 EndGlobal

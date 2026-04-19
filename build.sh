@@ -19,6 +19,8 @@ export DOTNET_NOLOGO=1
 # EXECUTION
 ###########################################################################
 
+dotnet --list-sdks
+
 # If dotnet CLI is installed globally and it matches requested version, use for execution
 if [ -x "$(command -v dotnet)" ] && dotnet --version &>/dev/null; then
     export DOTNET_EXE="$(command -v dotnet)"
