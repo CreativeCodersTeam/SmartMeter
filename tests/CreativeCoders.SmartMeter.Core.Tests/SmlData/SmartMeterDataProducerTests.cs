@@ -4,6 +4,7 @@ using CreativeCoders.SmartMeter.Core.SmlData;
 using CreativeCoders.SmartMeter.Core.Tests.Fixtures;
 using CreativeCoders.SmartMeter.DataProcessing;
 using FakeItEasy;
+using FakeItEasy.Core;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using Xunit;
@@ -46,8 +47,28 @@ public class SmartMeterDataProducerTests
 
         // Assert
         port.OpenCount.Should().Be(1);
-        // Note: SubscribeOn wraps the observer, so we cannot assert on the exact observer instance.
+        // Subscribe runs via SubscribeOn(TaskPoolScheduler), so the Subscribe call on
+        // the fake may not have happened synchronously when the assertion runs. Poll
+        // briefly to avoid CI flakiness.
+        await WaitForCallAsync(pipeline,
+            call => call.Method.Name == nameof(IObservable<SmartMeterValue>.Subscribe));
         A.CallTo(() => pipeline.Subscribe(A<IObserver<SmartMeterValue>>._)).MustHaveHappened();
+    }
+
+    private static async Task WaitForCallAsync(object fake, Func<ICompletedFakeObjectCall, bool> predicate,
+        int timeoutMs = 2000)
+    {
+        var start = Environment.TickCount;
+
+        while (Environment.TickCount - start < timeoutMs)
+        {
+            if (Fake.GetCalls(fake).Any(predicate))
+            {
+                return;
+            }
+
+            await Task.Delay(20);
+        }
     }
 
     [Fact]
