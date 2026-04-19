@@ -1,14 +1,18 @@
 ﻿using System.Collections.Concurrent;
+using CreativeCoders.Core;
 
 namespace CreativeCoders.SmartMeter.DataProcessing.History;
 
 public class ValueHistory
 {
-    private readonly ConcurrentDictionary<SmlValueType, ValueHistoryData> _data = new ConcurrentDictionary<SmlValueType, ValueHistoryData>();
+    private readonly Lock _syncObj = new Lock();
+
+    private readonly ConcurrentDictionary<SmlValueType, ValueHistoryData> _data =
+        new ConcurrentDictionary<SmlValueType, ValueHistoryData>();
 
     public ValueHistoryData GetHistoryData(SmlValueType valueType)
     {
-        lock (this)
+        lock (_syncObj)
         {
             if (_data.TryGetValue(valueType, out var dataList))
             {

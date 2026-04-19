@@ -32,7 +32,7 @@ public class EndToEndTests
 
         result.Values.Should().HaveCount(2);
         result.Values.Select(v => v.ObisCode).Should()
-            .BeEquivalentTo(["1-0:1.8.0*255", "1-0:16.7.0*255"]);
+            .BeEquivalentTo("1-0:1.8.0*255", "1-0:16.7.0*255");
         result.Values.Single(v => v.Unit == SmlUnit.WattHour).Value.Should().Be(12345.6m);
         result.Values.Single(v => v.Unit == SmlUnit.Watt).Value.Should().Be(567m);
     }

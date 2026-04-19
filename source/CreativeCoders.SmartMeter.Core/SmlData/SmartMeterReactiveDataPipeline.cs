@@ -37,12 +37,12 @@ public class SmartMeterReactiveDataPipeline : ISmartMeterReactiveDataPipeline
 
     public void OnCompleted()
     {
-        //throw new NotImplementedException();
+        _valueSubject.OnCompleted();
     }
 
     public void OnError(Exception error)
     {
-        //throw new NotImplementedException();
+        _logger.LogError(error, "Observer error in SmartMeterReactiveDataPipeline");
     }
 
     public void OnNext(byte[] value)

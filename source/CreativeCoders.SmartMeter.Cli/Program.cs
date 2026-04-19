@@ -2,14 +2,13 @@
 using CreativeCoders.SmartMeter.Core.SmlData;
 using CreativeCoders.SmartMeter.Core.Unlock;
 using CreativeCoders.SmartMeter.DataProcessing;
-using CreativeCoders.SmartMeter.Server.Core;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Spectre.Console;
 
 namespace CreativeCoders.SmartMeter.Cli;
 
-class Program
+internal static class Program
 {
     static async Task Main(string[] args)
     {
