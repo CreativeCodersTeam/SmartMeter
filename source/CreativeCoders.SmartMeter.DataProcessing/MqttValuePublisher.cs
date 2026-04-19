@@ -21,6 +21,8 @@ public class MqttValuePublisher : IMqttValuePublisher
 
     private readonly Thread _workerThread;
 
+    private bool _disposed;
+
     /// <summary>Creates a publisher using a real MQTT client produced by <see cref="MqttClientFactory"/>.</summary>
     public MqttValuePublisher(MqttPublisherOptions options, ILogger<MqttValuePublisher> logger)
         : this(options, logger, new MqttClientFactory().CreateMqttClient())
@@ -46,7 +48,11 @@ public class MqttValuePublisher : IMqttValuePublisher
             {
                 _logger.LogError(e, "Error in MqttValuePublisher worker thread");
             }
-        });
+        })
+        {
+            IsBackground = true,
+            Name = nameof(MqttValuePublisher)
+        };
     }
 
     public async Task InitAsync()
@@ -129,6 +135,48 @@ public class MqttValuePublisher : IMqttValuePublisher
 
     public void OnNext(SmartMeterValue value)
     {
+        if (_disposed || _publishingQueue.IsAddingCompleted)
+        {
+            return;
+        }
+
         _publishingQueue.Add(value);
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (_disposed)
+        {
+            return;
+        }
+
+        _disposed = true;
+
+        // Signal the worker to drain and exit.
+        _publishingQueue.CompleteAdding();
+
+        // Give the worker a brief window to exit; it consumes via GetConsumingEnumerable
+        // which completes once the queue is marked complete and empty.
+        if (_workerThread.IsAlive)
+        {
+            _workerThread.Join(TimeSpan.FromSeconds(2));
+        }
+
+        try
+        {
+            if (_client.IsConnected)
+            {
+                await _client.DisconnectAsync().ConfigureAwait(false);
+            }
+        }
+        catch (Exception e)
+        {
+            _logger.LogDebug(e, "Error while disconnecting MQTT client during dispose");
+        }
+
+        _client.Dispose();
+        _publishingQueue.Dispose();
+
+        GC.SuppressFinalize(this);
     }
 }

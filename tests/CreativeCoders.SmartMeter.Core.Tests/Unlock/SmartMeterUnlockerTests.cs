@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using AwesomeAssertions;
 using CreativeCoders.SmartMeter.Core.Tests.Fixtures;
@@ -116,6 +117,8 @@ public class SmartMeterUnlockerTests
     }
 
     [Fact]
+    [SuppressMessage("ReSharper", "MethodHasAsyncOverload")]
+    [SuppressMessage("csharpsquid", "S6966", Justification = "Sync method is ok in tests")]
     public async Task UnlockAsync_WhenCancelledBeforeSend_ReturnsCancelled()
     {
         // Arrange

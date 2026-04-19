@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Reactive.Subjects;
 using System.Reactive.Linq;
 using AwesomeAssertions;
@@ -40,6 +41,7 @@ public class SmartMeterReactiveDataPipelineTests
         }
 
         // Suppress unused-event warning
+        [SuppressMessage("ReSharper", "UnusedMember.Local")]
         public void RaiseReceived(SmlFrame frame) =>
             MessageReceived?.Invoke(this, new SmlMessageEventArgs(frame));
     }
@@ -163,8 +165,10 @@ public class SmartMeterReactiveDataPipelineTests
         // Arrange
         var (sut, parser, detector) = CreateSut();
         parser.ParseBehavior = _ => new SmlParseResult(
-            [new ObisValue("1-0:1.8.0*255", null, SmlUnit.Unknown, 0, [],
-                SmlMessageValueType.Unsigned)], []);
+        [
+            new ObisValue("1-0:1.8.0*255", null, SmlUnit.Unknown, 0, [],
+                SmlMessageValueType.Unsigned)
+        ], []);
 
         var received = new List<SmartMeterValue>();
         sut.Subscribe(new LambdaObserver<SmartMeterValue>(received.Add));

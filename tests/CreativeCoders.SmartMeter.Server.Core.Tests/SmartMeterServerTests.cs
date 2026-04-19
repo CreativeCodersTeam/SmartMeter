@@ -46,7 +46,7 @@ public class SmartMeterServerTests
     }
 
     [Fact]
-    public async Task StopAsync_StopsDataProducer()
+    public async Task StopAsync_StopsDataProducerThenDisposesPublisher()
     {
         // Arrange
         var sut = CreateSut();
@@ -55,7 +55,8 @@ public class SmartMeterServerTests
         await sut.StopAsync();
 
         // Assert
-        A.CallTo(() => _producer.StopAsync()).MustHaveHappened();
+        A.CallTo(() => _producer.StopAsync()).MustHaveHappened()
+            .Then(A.CallTo(() => _publisher.DisposeAsync()).MustHaveHappened());
     }
 
     [Fact]

@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using CreativeCoders.Core;
 using CreativeCoders.SmartMessageLanguage.Framing;
@@ -209,6 +210,8 @@ public sealed class SmlParser : ISmlParser
         }
     }
 
+    [SuppressMessage("csharpsquid", "S3776",
+        Justification = "This method is long but straightforward; refactor if it grows more complex.")]
     private void ReadValListEntry(ref SmlTlvReader reader, List<ObisValue> values,
         List<string> warnings)
     {

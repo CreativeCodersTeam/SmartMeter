@@ -22,12 +22,13 @@ public class MqttValuePublisherTests : IAsyncLifetime
 
     public Task InitializeAsync() => Task.CompletedTask;
 
-    public Task DisposeAsync()
+    public async Task DisposeAsync()
     {
-        // Stop the worker thread by completing the queue if started.
-        // No public dispose — rely on process shutdown; _sut goes out of scope.
-        _sut = null;
-        return Task.CompletedTask;
+        if (_sut is not null)
+        {
+            await _sut.DisposeAsync();
+            _sut = null;
+        }
     }
 
     private static MqttClientConnectResult SuccessConnectResult() =>

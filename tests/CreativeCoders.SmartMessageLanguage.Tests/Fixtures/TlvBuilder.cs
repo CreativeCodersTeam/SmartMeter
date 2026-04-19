@@ -1,4 +1,5 @@
 using System.Buffers.Binary;
+using System.Diagnostics.CodeAnalysis;
 
 namespace CreativeCoders.SmartMessageLanguage.Tests.Fixtures;
 
@@ -11,6 +12,7 @@ internal sealed class TlvBuilder
 {
     private readonly List<byte> _bytes = [];
 
+    [SuppressMessage("csharpsquid", "S2437", Justification = "This is a test fixture, so we can ignore the warning")]
     public TlvBuilder List(int count)
     {
         if (count > 0x0F)

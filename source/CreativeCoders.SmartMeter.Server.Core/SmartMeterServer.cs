@@ -33,6 +33,8 @@ public class SmartMeterServer(
 
         await _smartMeterDataProducer.StopAsync().ConfigureAwait(false);
 
+        await _mqttValuePublisher.DisposeAsync().ConfigureAwait(false);
+
         _logger.LogInformation("SmartMeter server stopped");
     }
 }
