@@ -6,7 +6,6 @@ using CreativeCoders.CakeBuild.Tasks.Defaults;
 using CreativeCoders.CakeBuild.Tasks.Templates.Settings;
 using CreativeCoders.Core;
 using CreativeCoders.Core.Collections;
-using CreativeCoders.Core.IO;
 using JetBrains.Annotations;
 
 namespace Build;
@@ -21,7 +20,7 @@ public class BuildContext(ICakeContext context)
 
     public string Copyright => $"{DateTime.Now.Year} CreativeCoders";
 
-    public string PackageProjectUrl => "https://github.com/CreativeCodersTeam/HomeMatic";
+    public string PackageProjectUrl => "https://github.com/CreativeCodersTeam/SmartMeter";
 
     public string PackageLicenseExpression => PackageLicenseExpressions.ApacheLicense20;
 
@@ -35,9 +34,9 @@ public class BuildContext(ICakeContext context)
 
     public DirectoryPath PublishOutputDir => ArtifactsDir.Combine("published");
 
-    private const string CliPath = "source/Tools/Cli/CreativeCoders.HomeMatic.Tools.Cli.Hmc";
+    private const string CliPath = "source/CreativeCoders.SmartMeter.Cli";
 
-    private const string CliProjectFile = "CreativeCoders.HomeMatic.Tools.Cli.Hmc.csproj";
+    private const string CliProjectFile = "CreativeCoders.SmartMeter.Cli.csproj";
 
     public IEnumerable<PublishingItem> PublishingItems =>
     [
@@ -45,48 +44,21 @@ public class BuildContext(ICakeContext context)
             RootDir
                 .Combine(CliPath)
                 .CombineWithFilePath(CliProjectFile),
-            PublishOutputDir.Combine("cli")),
-        new PublishingItem(
-            RootDir
-                .Combine(CliPath)
-                .CombineWithFilePath(CliProjectFile),
-            PublishOutputDir.Combine("cli-win64"))
-        {
-            Runtime = "win-x64",
-            SelfContained = true
-        },
-        new PublishingItem(
-            RootDir
-                .Combine(CliPath)
-                .CombineWithFilePath(CliProjectFile),
-            PublishOutputDir.Combine("cli-win64-no-selfcontained"))
-        {
-            Runtime = "win-x64",
-            SelfContained = false
-        },
-        new PublishingItem(
-            RootDir
-                .Combine(CliPath)
-                .CombineWithFilePath(CliProjectFile),
-            PublishOutputDir.Combine("cli-win-arm64"))
-        {
-            Runtime = "win-arm64",
-            SelfContained = true
-        }
+            PublishOutputDir.Combine("cli"))
     ];
 
-    private const string DistPackageName = "HomeMatic.Cli";
+    private const string CliDistPackageName = "SmartMeter.Cli";
 
     public IEnumerable<DistPackage> DistPackages =>
     [
-        new DistPackage(DistPackageName, PublishOutputDir.Combine("cli"))
+        new DistPackage(CliDistPackageName, PublishOutputDir.Combine("cli"))
     ];
 
     public string ReleaseName => $"v{Version.FullSemVer}";
 
     public string ReleaseVersion => $"v{Version.FullSemVer}";
 
-    public string ReleaseBody => "HomeMatic Release";
+    public string ReleaseBody => "SmartMeter Release";
 
     public bool IsPreRelease => !string.IsNullOrWhiteSpace(Version.PreReleaseTag);
 
@@ -94,6 +66,6 @@ public class BuildContext(ICakeContext context)
     [
         new GitHubReleaseFileAsset(
             GetRequiredSettings<ICreateDistPackagesTaskSettings>().DistOutputPath
-                .CombineWithFilePath(DistPackageName + ".tar.gz").FullPath, null)
+                .CombineWithFilePath(CliDistPackageName + ".tar.gz").FullPath, null)
     ];
 }

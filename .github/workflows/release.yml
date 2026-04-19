@@ -36,5 +36,5 @@ jobs:
       - name: 'Publish: cli dist package'
         uses: actions/upload-artifact@v4
         with:
-          name: HomeMatic.Cli
-          path: .artifacts/dist/HomeMatic.Cli.tar.gz
+          name: SmartMeter.Cli
+          path: .artifacts/dist/SmartMeter.Cli.tar.gz
