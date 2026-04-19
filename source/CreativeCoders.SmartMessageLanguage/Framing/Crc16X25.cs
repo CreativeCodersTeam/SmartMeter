@@ -11,7 +11,7 @@ namespace CreativeCoders.SmartMessageLanguage.Framing;
 /// </remarks>
 internal static class Crc16X25
 {
-    private static readonly ushort[] _table = BuildTable();
+    private static readonly ushort[] Table = BuildTable();
 
     /// <summary>Computes the CRC-16/X-25 over the given buffer.</summary>
     /// <param name="data">Bytes to compute the CRC over.</param>
@@ -22,7 +22,7 @@ internal static class Crc16X25
 
         foreach (var b in data)
         {
-            crc = (ushort)((crc >> 8) ^ _table[(crc ^ b) & 0xFF]);
+            crc = (ushort)((crc >> 8) ^ Table[(crc ^ b) & 0xFF]);
         }
 
         return (ushort)(crc ^ 0xFFFF);
