@@ -1,9 +1,9 @@
-name: integration
+name: pull-request
 
 on:
-  push:
+  pull_request:
     branches:
-      - 'feature/**'
+      - main
 
 jobs:
   ubuntu-latest:
@@ -19,20 +19,13 @@ jobs:
           path: |
             ~/.nuget/packages
           key: ${{ runner.os }}-${{ hashFiles('**/global.json', '**/*.csproj', '**/Directory.Packages.props') }}
-      - name: 'Build with target: NuGetPush'
-        run: ./build.cmd -t nugetpush -t publish -t createdistpackages
-        env:
-          NUGET_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: 'Build with target: Pack'
+        run: ./build.cmd -t pack
       - name: 'Publish: coverage_report'
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report-linux
           path: .tests/coverage-report
-      - name: 'Publish: cli dist package'
-        uses: actions/upload-artifact@v4
-        with:
-          name: HomeMatic.Cli
-          path: .artifacts/dist/HomeMatic.Cli.tar.gz
   windows-latest:
     name: windows-latest
     runs-on: windows-latest
@@ -47,9 +40,9 @@ jobs:
             ~/.nuget/packages
           key: ${{ runner.os }}-${{ hashFiles('**/global.json', '**/*.csproj', '**/Directory.Packages.props') }}
       - name: 'Build with target: Pack'
+        run: ./build.cmd -t pack
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: ./build.cmd -t pack
       - name: 'Publish: coverage_report'
         uses: actions/upload-artifact@v4
         with:

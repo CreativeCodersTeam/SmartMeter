@@ -6,5 +6,6 @@
         <RepositoryUrl>https://github.com/CreativeCodersTeam/SmartMeter</RepositoryUrl>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
+        <IsPackable>false</IsPackable>
     </PropertyGroup>
 </Project>

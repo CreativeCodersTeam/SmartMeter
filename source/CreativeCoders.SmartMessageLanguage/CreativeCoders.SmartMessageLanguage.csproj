@@ -3,17 +3,18 @@
     <PropertyGroup>
         <Description>Streaming detector and parser for the Smart Message Language (SML) protocol</Description>
         <RootNamespace>CreativeCoders.SmartMessageLanguage</RootNamespace>
+        <IsPackable>true</IsPackable>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="CreativeCoders.Core" />
-      <PackageReference Include="JetBrains.Annotations" />
-      <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
-      <PackageReference Include="System.Reactive" />
+        <PackageReference Include="CreativeCoders.Core"/>
+        <PackageReference Include="JetBrains.Annotations"/>
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions"/>
+        <PackageReference Include="System.Reactive"/>
     </ItemGroup>
 
     <ItemGroup>
-        <InternalsVisibleTo Include="CreativeCoders.SmartMessageLanguage.Tests" />
+        <InternalsVisibleTo Include="CreativeCoders.SmartMessageLanguage.Tests"/>
     </ItemGroup>
 
 </Project>
