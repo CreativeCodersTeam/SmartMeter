@@ -1,7 +1,6 @@
 using AwesomeAssertions;
 using CreativeCoders.SmartMeter.Core.SmlData;
 using CreativeCoders.SmartMeter.DataProcessing;
-using CreativeCoders.SmartMeter.Server.Core;
 using FakeItEasy;
 using Microsoft.Extensions.Logging.Abstractions;
 using Xunit;
@@ -14,7 +13,7 @@ public class SmartMeterServerTests
     private readonly ISmartMeterDataProducer _producer = A.Fake<ISmartMeterDataProducer>();
 
     private SmartMeterServer CreateSut() =>
-        new(NullLogger<SmartMeterServer>.Instance, _publisher, _producer);
+        new SmartMeterServer(NullLogger<SmartMeterServer>.Instance, _publisher, _producer);
 
     [Fact]
     public async Task StartAsync_InitializesPublisherThenStartsProducerWithPublisher()
@@ -38,7 +37,7 @@ public class SmartMeterServerTests
         var sut = CreateSut();
 
         // Act
-        var act = () => sut.StartAsync();
+        var act = sut.StartAsync;
 
         // Assert
         await act.Should().ThrowAsync<InvalidOperationException>();

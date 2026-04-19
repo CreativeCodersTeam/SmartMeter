@@ -10,6 +10,7 @@ using Xunit;
 
 namespace CreativeCoders.SmartMeter.Core.Tests.Unlock;
 
+[SuppressMessage("ReSharper", "UseUtf8StringLiteral")]
 public class SmartMeterUnlockerTests
 {
     private static (SmartMeterUnlocker Sut, FakeReactiveSerialPort Port) CreateSut(

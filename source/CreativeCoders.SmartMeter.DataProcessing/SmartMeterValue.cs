@@ -6,5 +6,5 @@ public class SmartMeterValue(SmartMeterValueType type)
 
     public decimal Value { get; init; }
 
-    public bool WriteAsJson { get; set; } = true;
+    public bool WriteAsJson { get; init; } = true;
 }

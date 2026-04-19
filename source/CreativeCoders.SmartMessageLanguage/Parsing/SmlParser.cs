@@ -317,6 +317,7 @@ public sealed class SmlParser : ISmlParser
     private decimal? ComputeDecimalValue(SmlTlvElement value, sbyte scaler,
         List<string> warnings, string obisCode)
     {
+        // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
         switch (value.Type)
         {
             case SmlMessageValueType.Unsigned:
@@ -363,12 +364,9 @@ public sealed class SmlParser : ISmlParser
 
     private static string ToHex(ReadOnlySpan<byte> data)
     {
-        if (data.IsEmpty)
-        {
-            return string.Empty;
-        }
-
-        return Convert.ToHexString(data);
+        return data.IsEmpty
+            ? string.Empty
+            : Convert.ToHexString(data);
     }
 
     private static void SkipListEntries(ref SmlTlvReader reader, int count)

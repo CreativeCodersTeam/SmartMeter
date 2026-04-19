@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using AwesomeAssertions;
 using CreativeCoders.SmartMeter.Core.Unlock;
@@ -5,6 +6,7 @@ using Xunit;
 
 namespace CreativeCoders.SmartMeter.Core.Tests.Unlock;
 
+[SuppressMessage("ReSharper", "UseUtf8StringLiteral")]
 public class ObisCodeScannerTests
 {
     [Theory]

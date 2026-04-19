@@ -10,7 +10,7 @@ namespace CreativeCoders.SmartMeter.Cli;
 
 internal static class Program
 {
-    static async Task Main(string[] args)
+    internal static async Task Main(string[] args)
     {
         AnsiConsole.WriteLine("Starting Smart Meter CLI...");
 

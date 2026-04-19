@@ -1,6 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Reactive.Subjects;
-using System.Reactive.Linq;
 using AwesomeAssertions;
 using CreativeCoders.SmartMessageLanguage.Framing;
 using CreativeCoders.SmartMessageLanguage.Parsing;
@@ -18,7 +17,7 @@ public class SmartMeterReactiveDataPipelineTests
 {
     private sealed class StubSmlMessageDetector : ISmlMessageDetector
     {
-        public Subject<SmlFrame> MessagesSubject { get; } = new();
+        public Subject<SmlFrame> MessagesSubject { get; } = new Subject<SmlFrame>();
 
         public event EventHandler<SmlMessageEventArgs>? MessageReceived;
 
@@ -56,10 +55,10 @@ public class SmartMeterReactiveDataPipelineTests
         public SmlParseResult Parse(ReadOnlySpan<byte> payload) => ParseBehavior(payload.ToArray());
     }
 
-    private static SmlFrame MakeFrame(byte[] payload) => new(payload, payload, true, 0);
+    private static SmlFrame MakeFrame(byte[] payload) => new SmlFrame(payload, payload, true, 0);
 
     private static ObisValue MakeObis(string code, decimal value) =>
-        new(code, value, SmlUnit.WattHour, 0, [], SmlMessageValueType.Unsigned);
+        new ObisValue(code, value, SmlUnit.WattHour, 0, [], SmlMessageValueType.Unsigned);
 
     private static (SmartMeterReactiveDataPipeline Sut, StubSmlParser Parser,
         StubSmlMessageDetector Detector) CreateSut(SmartMeterOptions? opts = null)

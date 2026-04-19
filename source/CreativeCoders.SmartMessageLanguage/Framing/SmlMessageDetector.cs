@@ -21,7 +21,7 @@ public sealed class SmlMessageDetector : ISmlMessageDetector
     // Defensive cap to prevent unbounded buffer growth if the peer never closes a frame.
     private const int MaxBufferSize = 64 * 1024;
 
-    private static readonly byte[] _startEscape =
+    private static readonly byte[] StartEscape =
         [0x1B, 0x1B, 0x1B, 0x1B, 0x01, 0x01, 0x01, 0x01];
 
     private readonly Subject<SmlFrame> _subject = new Subject<SmlFrame>();
@@ -131,7 +131,7 @@ public sealed class SmlMessageDetector : ISmlMessageDetector
 
         // Scan from just after the 8-byte start escape for the end escape, while
         // correctly stepping over doubled 0x1B escape runs inside the body.
-        var pos = _startEscape.Length;
+        var pos = StartEscape.Length;
 
         while (pos + 4 <= _length)
         {
@@ -178,13 +178,13 @@ public sealed class SmlMessageDetector : ISmlMessageDetector
 
     private bool TryAnchorOnStart()
     {
-        var idx = IndexOf(_buffer.AsSpan(0, _length), _startEscape);
+        var idx = IndexOf(_buffer.AsSpan(0, _length), StartEscape);
 
         if (idx < 0)
         {
             // Keep only the last (startEscape.Length - 1) bytes so a start escape
             // spanning two Append calls can still be detected.
-            var keep = Math.Min(_startEscape.Length - 1, _length);
+            var keep = Math.Min(StartEscape.Length - 1, _length);
             var drop = _length - keep;
 
             if (drop > 0)
@@ -225,7 +225,7 @@ public sealed class SmlMessageDetector : ISmlMessageDetector
     {
         // Body lies between the 8-byte start escape and the 8-byte end escape,
         // minus any trailing 0x00 padding bytes used to align to a 4-byte boundary.
-        var bodyStart = _startEscape.Length;
+        var bodyStart = StartEscape.Length;
         var bodyEnd = frame.Length - 8 - paddingBytes;
 
         if (bodyEnd < bodyStart)

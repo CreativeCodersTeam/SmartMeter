@@ -1,9 +1,12 @@
+using JetBrains.Annotations;
+
 namespace CreativeCoders.SmartMessageLanguage.Units;
 
 /// <summary>
 /// Subset of DLMS/IEC 62056-62 unit codes commonly used by electricity meters.
 /// The numeric values match the SML <c>SML_Unit</c> codes as received on the wire.
 /// </summary>
+[PublicAPI]
 public enum SmlUnit : byte
 {
     /// <summary>Unknown or unassigned unit.</summary>

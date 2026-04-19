@@ -1,7 +1,9 @@
 using CreativeCoders.SmartMessageLanguage.Framing;
+using JetBrains.Annotations;
 
 namespace CreativeCoders.SmartMessageLanguage.Parsing;
 
+[PublicAPI]
 public interface ISmlParser
 {
     /// <summary>Parses all OBIS values contained in the given frame.</summary>

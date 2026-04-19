@@ -1,5 +1,4 @@
 ﻿using System.Collections.Concurrent;
-using CreativeCoders.Core;
 
 namespace CreativeCoders.SmartMeter.DataProcessing.History;
 

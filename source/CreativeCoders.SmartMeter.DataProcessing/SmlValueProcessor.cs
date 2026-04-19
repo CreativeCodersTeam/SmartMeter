@@ -78,6 +78,7 @@ public class SmlValueProcessor : IObservable<SmartMeterValue>
             return;
         }
 
+        // ReSharper disable once SwitchStatementMissingSomeEnumCasesNoDefault
         switch (value.Type)
         {
             case SmartMeterValueType.CurrentPurchasingPower:

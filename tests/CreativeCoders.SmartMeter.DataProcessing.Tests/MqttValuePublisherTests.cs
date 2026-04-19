@@ -11,7 +11,8 @@ namespace CreativeCoders.SmartMeter.DataProcessing.Tests;
 public class MqttValuePublisherTests : IAsyncLifetime
 {
     private readonly IMqttClient _client = A.Fake<IMqttClient>();
-    private readonly MqttPublisherOptions _options = new()
+
+    private readonly MqttPublisherOptions _options = new MqttPublisherOptions
     {
         Server = new Uri("tcp://localhost:1883"),
         ClientName = "test-client",
@@ -31,11 +32,11 @@ public class MqttValuePublisherTests : IAsyncLifetime
         }
     }
 
-    private static MqttClientConnectResult SuccessConnectResult() =>
-        new() { ResultCode = MqttClientConnectResultCode.Success };
+    private static MqttClientConnectResult SuccessConnectResult() => new MqttClientConnectResult
+        { ResultCode = MqttClientConnectResultCode.Success };
 
     private static MqttClientPublishResult PublishOk() =>
-        new(null, MqttClientPublishReasonCode.Success, null!, []);
+        new MqttClientPublishResult(null, MqttClientPublishReasonCode.Success, null!, []);
 
     private MqttValuePublisher Create()
     {
@@ -73,7 +74,7 @@ public class MqttValuePublisherTests : IAsyncLifetime
         var sut = Create();
 
         // Act
-        var act = () => sut.InitAsync();
+        var act = sut.InitAsync;
 
         // Assert
         await act.Should().ThrowAsync<InvalidOperationException>()
@@ -106,7 +107,8 @@ public class MqttValuePublisherTests : IAsyncLifetime
 
         published.Should().ContainSingle();
         published[0].Topic.Should().Be("smartmeter/values/TotalPurchasedEnergy");
-        Encoding.UTF8.GetString(System.Buffers.BuffersExtensions.ToArray(published[0].Payload)).Should().Contain("\"Value\":42");
+        Encoding.UTF8.GetString(System.Buffers.BuffersExtensions.ToArray(published[0].Payload)).Should()
+            .Contain("\"Value\":42");
     }
 
     [Fact]
@@ -205,7 +207,7 @@ public class MqttValuePublisherTests : IAsyncLifetime
 
         // Act
         var act1 = () => sut.OnError(new Exception("boom"));
-        var act2 = () => sut.OnCompleted();
+        var act2 = sut.OnCompleted;
 
         // Assert
         act1.Should().NotThrow();

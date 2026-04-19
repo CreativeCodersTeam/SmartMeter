@@ -11,7 +11,7 @@ namespace CreativeCoders.SmartMessageLanguage.Tests.Parsing;
 
 public class SmlParserTests
 {
-    private static SmlParser CreateSut() => new(NullLogger<SmlParser>.Instance);
+    private static SmlParser CreateSut() => new SmlParser(NullLogger<SmlParser>.Instance);
 
     [Fact]
     public void Parse_GetListResponsePayload_ExtractsAllObisValues()
@@ -85,9 +85,9 @@ public class SmlParserTests
         // Top-level List(3) instead of the expected List(6): parser just skips the entries.
         var payload = new TlvBuilder()
             .List(3)
-                .OctetString([0x01])
-                .OctetString([0x02])
-                .OctetString([0x03])
+            .OctetString([0x01])
+            .OctetString([0x02])
+            .OctetString([0x03])
             .ToArray();
 
         var result = CreateSut().Parse(payload);
@@ -101,11 +101,11 @@ public class SmlParserTests
         // messageBody (field 4) must be List(2); supply List(1) → "Malformed SML_Message body wrapper".
         var payload = new TlvBuilder()
             .List(6)
-                .OctetString([0xAA])     // transactionId
-                .UInt8(0)                // groupNo
-                .UInt8(0)                // abortOnError
-                .List(1)                 // malformed body wrapper
-                    .UInt32(0x00000701)
+            .OctetString([0xAA]) // transactionId
+            .UInt8(0) // groupNo
+            .UInt8(0) // abortOnError
+            .List(1) // malformed body wrapper
+            .UInt32(0x00000701)
             .ToArray();
 
         var result = CreateSut().Parse(payload);
@@ -119,12 +119,12 @@ public class SmlParserTests
         // messageBody type tag must be Unsigned; supply OctetString instead.
         var payload = new TlvBuilder()
             .List(6)
-                .OctetString([0xAA])
-                .UInt8(0)
-                .UInt8(0)
-                .List(2)
-                    .OctetString([0x01])      // should be Unsigned type tag
-                    .List(0)
+            .OctetString([0xAA])
+            .UInt8(0)
+            .UInt8(0)
+            .List(2)
+            .OctetString([0x01]) // should be Unsigned type tag
+            .List(0)
             .ToArray();
 
         var result = CreateSut().Parse(payload);
@@ -150,17 +150,17 @@ public class SmlParserTests
         // GetListResponse must be List(7); inject List(3).
         var payload = new TlvBuilder()
             .List(6)
-                .OctetString([0xAA])
-                .UInt8(0)
-                .UInt8(0)
-                .List(2)
-                    .UInt32(0x00000701)
-                    .List(3)
-                        .OctetString([0x01])
-                        .OctetString([0x02])
-                        .OctetString([0x03])
-                .UInt8(0)
-                .EndOfMessage()
+            .OctetString([0xAA])
+            .UInt8(0)
+            .UInt8(0)
+            .List(2)
+            .UInt32(0x00000701)
+            .List(3)
+            .OctetString([0x01])
+            .OctetString([0x02])
+            .OctetString([0x03])
+            .UInt8(0)
+            .EndOfMessage()
             .ToArray();
 
         var result = CreateSut().Parse(payload);
@@ -196,7 +196,7 @@ public class SmlParserTests
     {
         var payload = BuildGetListResponseWithValList(b => b
             .List(1)
-                .UInt8(0x42)); // entry should itself be a List, not an Unsigned.
+            .UInt8(0x42)); // entry should itself be a List, not an Unsigned.
 
         var result = CreateSut().Parse(payload);
 
@@ -208,10 +208,10 @@ public class SmlParserTests
     {
         var payload = BuildGetListResponseWithValList(b => b
             .List(1)
-                .List(3)
-                    .OctetString(SampleSmlFile.ObisEnergy)
-                    .Null()
-                    .Null());
+            .List(3)
+            .OctetString(SampleSmlFile.ObisEnergy)
+            .Null()
+            .Null());
 
         var result = CreateSut().Parse(payload);
 
@@ -223,13 +223,13 @@ public class SmlParserTests
     {
         var payload = BuildGetListResponseWithValList(b => b
             .List(1)
-                .List(6)
-                    .UInt8(0x42)   // objName must be OctetString
-                    .Null()
-                    .Null()
-                    .UInt8(0)
-                    .Int8(0)
-                    .UInt8(0));
+            .List(6)
+            .UInt8(0x42) // objName must be OctetString
+            .Null()
+            .Null()
+            .UInt8(0)
+            .Int8(0)
+            .UInt8(0));
 
         var result = CreateSut().Parse(payload);
 
@@ -242,13 +242,13 @@ public class SmlParserTests
         // Unit code 99 is not defined in SmlUnit → warning, Unit=Unknown, value still parsed.
         var payload = BuildGetListResponseWithValList(b => b
             .List(1)
-                .List(7)
-                    .OctetString(SampleSmlFile.ObisEnergy)
-                    .Null().Null()
-                    .UInt8(99)
-                    .Int8(0)
-                    .UInt8(42)
-                    .Null());
+            .List(7)
+            .OctetString(SampleSmlFile.ObisEnergy)
+            .Null().Null()
+            .UInt8(99)
+            .Int8(0)
+            .UInt8(42)
+            .Null());
 
         var result = CreateSut().Parse(payload);
 
@@ -263,13 +263,13 @@ public class SmlParserTests
         // Unit code 0 is defined as SmlUnit.Unknown; no warning should be raised.
         var payload = BuildGetListResponseWithValList(b => b
             .List(1)
-                .List(7)
-                    .OctetString(SampleSmlFile.ObisEnergy)
-                    .Null().Null()
-                    .UInt8(0)
-                    .Int8(0)
-                    .UInt8(1)
-                    .Null());
+            .List(7)
+            .OctetString(SampleSmlFile.ObisEnergy)
+            .Null().Null()
+            .UInt8(0)
+            .Int8(0)
+            .UInt8(1)
+            .Null());
 
         var result = CreateSut().Parse(payload);
 
@@ -282,13 +282,13 @@ public class SmlParserTests
     {
         var payload = BuildGetListResponseWithValList(b => b
             .List(1)
-                .List(7)
-                    .OctetString(SampleSmlFile.ObisEnergy)
-                    .Null().Null()
-                    .UInt8(0)
-                    .Int8(0)
-                    .Bool(true)
-                    .Null());
+            .List(7)
+            .OctetString(SampleSmlFile.ObisEnergy)
+            .Null().Null()
+            .UInt8(0)
+            .Int8(0)
+            .Bool(true)
+            .Null());
 
         var result = CreateSut().Parse(payload);
 
@@ -303,13 +303,13 @@ public class SmlParserTests
         // Server ID-like value: OctetString → RawValue populated, Value null, no warning.
         var payload = BuildGetListResponseWithValList(b => b
             .List(1)
-                .List(7)
-                    .OctetString(SampleSmlFile.ObisEnergy)
-                    .Null().Null()
-                    .UInt8(0)
-                    .Int8(0)
-                    .OctetString([0x01, 0x02, 0x03])
-                    .Null());
+            .List(7)
+            .OctetString(SampleSmlFile.ObisEnergy)
+            .Null().Null()
+            .UInt8(0)
+            .Int8(0)
+            .OctetString([0x01, 0x02, 0x03])
+            .Null());
 
         var result = CreateSut().Parse(payload);
 
@@ -326,13 +326,13 @@ public class SmlParserTests
         // A List as value is not supported by ComputeDecimalValue → warning.
         var payload = BuildGetListResponseWithValList(b => b
             .List(1)
-                .List(7)
-                    .OctetString(SampleSmlFile.ObisEnergy)
-                    .Null().Null()
-                    .UInt8(0)
-                    .Int8(0)
-                    .List(0)
-                    .Null());
+            .List(7)
+            .OctetString(SampleSmlFile.ObisEnergy)
+            .Null().Null()
+            .UInt8(0)
+            .Int8(0)
+            .List(0)
+            .Null());
 
         var result = CreateSut().Parse(payload);
 
@@ -348,13 +348,13 @@ public class SmlParserTests
     {
         var payload = BuildGetListResponseWithValList(b => b
             .List(1)
-                .List(7)
-                    .OctetString(SampleSmlFile.ObisEnergy)
-                    .Null().Null()
-                    .UInt8(SampleSmlFile.UnitWattHour)
-                    .Int8(scaler)
-                    .UInt8(raw)
-                    .Null());
+            .List(7)
+            .OctetString(SampleSmlFile.ObisEnergy)
+            .Null().Null()
+            .UInt8(SampleSmlFile.UnitWattHour)
+            .Int8(scaler)
+            .UInt8(raw)
+            .Null());
 
         var result = CreateSut().Parse(payload);
 
@@ -367,13 +367,13 @@ public class SmlParserTests
         // Signed -5 with scaler 0 → -5.
         var payload = BuildGetListResponseWithValList(b => b
             .List(1)
-                .List(7)
-                    .OctetString(SampleSmlFile.ObisPower)
-                    .Null().Null()
-                    .UInt8(SampleSmlFile.UnitWatt)
-                    .Int8(0)
-                    .Int8(-5)
-                    .Null());
+            .List(7)
+            .OctetString(SampleSmlFile.ObisPower)
+            .Null().Null()
+            .UInt8(SampleSmlFile.UnitWatt)
+            .Int8(0)
+            .Int8(-5)
+            .Null());
 
         var result = CreateSut().Parse(payload);
 
@@ -386,13 +386,13 @@ public class SmlParserTests
         // Scaler is OctetString (unexpected) → parser keeps scaler = 0.
         var payload = BuildGetListResponseWithValList(b => b
             .List(1)
-                .List(7)
-                    .OctetString(SampleSmlFile.ObisPower)
-                    .Null().Null()
-                    .UInt8(SampleSmlFile.UnitWatt)
-                    .OctetString([0x00])      // unexpected scaler type
-                    .UInt8(7)
-                    .Null());
+            .List(7)
+            .OctetString(SampleSmlFile.ObisPower)
+            .Null().Null()
+            .UInt8(SampleSmlFile.UnitWatt)
+            .OctetString([0x00]) // unexpected scaler type
+            .UInt8(7)
+            .Null());
 
         var result = CreateSut().Parse(payload);
 
@@ -407,13 +407,13 @@ public class SmlParserTests
         // 3-byte objName is below OBIS minimum length → formatted as uppercase hex.
         var payload = BuildGetListResponseWithValList(b => b
             .List(1)
-                .List(7)
-                    .OctetString([0xDE, 0xAD, 0xBE])
-                    .Null().Null()
-                    .UInt8(0)
-                    .Int8(0)
-                    .UInt8(1)
-                    .Null());
+            .List(7)
+            .OctetString([0xDE, 0xAD, 0xBE])
+            .Null().Null()
+            .UInt8(0)
+            .Int8(0)
+            .UInt8(1)
+            .Null());
 
         var result = CreateSut().Parse(payload);
 
@@ -426,11 +426,11 @@ public class SmlParserTests
         // 5-byte objName defaults the optional F to 255.
         var payload = BuildGetListResponseWithValList(b => b
             .List(1)
-                .List(7)
-                    .OctetString([1, 0, 1, 8, 0])
-                    .Null().Null()
-                    .UInt8(0).Int8(0).UInt8(0)
-                    .Null());
+            .List(7)
+            .OctetString([1, 0, 1, 8, 0])
+            .Null().Null()
+            .UInt8(0).Int8(0).UInt8(0)
+            .Null());
 
         var result = CreateSut().Parse(payload);
 
@@ -443,14 +443,14 @@ public class SmlParserTests
         // Entry with 8 fields (valid: minimum is 6, the parser skips anything beyond field 6).
         var payload = BuildGetListResponseWithValList(b => b
             .List(1)
-                .List(8)
-                    .OctetString(SampleSmlFile.ObisPower)
-                    .Null().Null()
-                    .UInt8(SampleSmlFile.UnitWatt)
-                    .Int8(0)
-                    .UInt8(42)
-                    .Null()         // valueSignature
-                    .Null());        // extra field
+            .List(8)
+            .OctetString(SampleSmlFile.ObisPower)
+            .Null().Null()
+            .UInt8(SampleSmlFile.UnitWatt)
+            .Int8(0)
+            .UInt8(42)
+            .Null() // valueSignature
+            .Null()); // extra field
 
         var result = CreateSut().Parse(payload);
 
@@ -474,9 +474,9 @@ public class SmlParserTests
 
         var message = new TlvBuilder()
             .List(6)
-                .OctetString([0xAA])
-                .UInt8(0)
-                .UInt8(0)
+            .OctetString([0xAA])
+            .UInt8(0)
+            .UInt8(0)
             .Append(body)
             .UInt8(0)
             .EndOfMessage();
@@ -489,10 +489,10 @@ public class SmlParserTests
     {
         var inner = new TlvBuilder()
             .List(7)
-                .OctetString([0x01])
-                .OctetString([0x02])
-                .Null()
-                .Null();
+            .OctetString([0x01])
+            .OctetString([0x02])
+            .Null()
+            .Null();
         valListBuilder(inner);
         inner.Null().Null();
 

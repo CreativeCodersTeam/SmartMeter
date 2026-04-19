@@ -74,7 +74,7 @@ public class SmlValueProcessorTests
         var smlValueProcessor = new SmlValueProcessor(input, fakeTimeProvider);
 
         // Act
-        smlValueProcessor.Subscribe(x => resultValues.Add(x));
+        smlValueProcessor.Subscribe(resultValues.Add);
 
         input.OnNext(smlValue1);
 

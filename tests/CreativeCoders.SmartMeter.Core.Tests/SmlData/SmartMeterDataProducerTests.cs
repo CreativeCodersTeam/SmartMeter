@@ -51,7 +51,7 @@ public class SmartMeterDataProducerTests
         // the fake may not have happened synchronously when the assertion runs. Poll
         // briefly to avoid CI flakiness.
         await WaitForCallAsync(pipeline,
-            call => call.Method.Name == nameof(IObservable<SmartMeterValue>.Subscribe));
+            call => call.Method.Name == nameof(IObservable<>.Subscribe));
         A.CallTo(() => pipeline.Subscribe(A<IObserver<SmartMeterValue>>._)).MustHaveHappened();
     }
 

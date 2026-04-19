@@ -10,7 +10,7 @@ namespace CreativeCoders.SmartMeter.Core.Tests.Fixtures;
 /// </summary>
 internal sealed class FakeReactiveSerialPort : IReactiveSerialPort
 {
-    private readonly Subject<byte[]> _subject = new();
+    private readonly Subject<byte[]> _subject = new Subject<byte[]>();
 
     public List<byte[]> Writes { get; } = [];
 
