@@ -11,6 +11,7 @@ public static class SmartMeterServerServiceCollectionExtensions
     public static IServiceCollection AddSmartMeterServer(this IServiceCollection services)
     {
         services.AddSml();
+        services.TryAddSingleton<IReactiveSerialPortFactory, ReactiveSerialPortFactory>();
         services.TryAddSingleton<ISmartMeterReactiveDataPipeline, SmartMeterReactiveDataPipeline>();
         services.TryAddSingleton<ISmartMeterUnlocker, SmartMeterUnlocker>();
 

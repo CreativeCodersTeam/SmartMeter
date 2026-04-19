@@ -4,7 +4,7 @@ using CreativeCoders.Core;
 
 namespace CreativeCoders.SmartMeter.Core;
 
-public sealed class ReactiveSerialPort : IObservable<byte[]>, IDisposable
+public sealed class ReactiveSerialPort : IReactiveSerialPort
 {
     private readonly IObservable<byte[]> _dataObservable;
 

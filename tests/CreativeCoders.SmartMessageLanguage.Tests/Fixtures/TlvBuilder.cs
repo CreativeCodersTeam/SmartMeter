@@ -97,6 +97,13 @@ internal sealed class TlvBuilder
         return this;
     }
 
+    public TlvBuilder Append(TlvBuilder other)
+    {
+        _bytes.AddRange(other._bytes);
+
+        return this;
+    }
+
     public byte[] ToArray() => _bytes.ToArray();
 
     private void AddPrimitive(byte typeNibble, byte[] payload)

@@ -9,7 +9,7 @@ using MQTTnet;
 
 namespace CreativeCoders.SmartMeter.DataProcessing;
 
-public class MqttValuePublisher : IObserver<SmartMeterValue>
+public class MqttValuePublisher : IMqttValuePublisher
 {
     private readonly IMqttClient _client;
 
@@ -21,12 +21,18 @@ public class MqttValuePublisher : IObserver<SmartMeterValue>
 
     private readonly Thread _workerThread;
 
+    /// <summary>Creates a publisher using a real MQTT client produced by <see cref="MqttClientFactory"/>.</summary>
     public MqttValuePublisher(MqttPublisherOptions options, ILogger<MqttValuePublisher> logger)
+        : this(options, logger, new MqttClientFactory().CreateMqttClient())
+    {
+    }
+
+    /// <summary>Creates a publisher with an injected <paramref name="client"/> (used by tests).</summary>
+    public MqttValuePublisher(MqttPublisherOptions options, ILogger<MqttValuePublisher> logger, IMqttClient client)
     {
         _options = Ensure.NotNull(options);
         _logger = Ensure.NotNull(logger);
-
-        _client = new MqttClientFactory().CreateMqttClient();
+        _client = Ensure.NotNull(client);
 
         _publishingQueue = new BlockingCollection<SmartMeterValue>();
 
@@ -34,7 +40,7 @@ public class MqttValuePublisher : IObserver<SmartMeterValue>
         {
             try
             {
-                await DoWorkAsync();
+                await DoWorkAsync().ConfigureAwait(false);
             }
             catch (Exception e)
             {

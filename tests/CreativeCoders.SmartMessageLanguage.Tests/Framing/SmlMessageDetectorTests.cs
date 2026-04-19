@@ -93,7 +93,6 @@ public class SmlMessageDetectorTests
 
         received.Should().HaveCount(1);
         received[0].IsCrcValid.Should().BeTrue();
-        // De-escaped payload should start with the original 4x0x1B run.
         received[0].PayloadBytes.AsSpan(0, 6).ToArray().Should()
             .Equal(0x1B, 0x1B, 0x1B, 0x1B, 0x09, 0x08);
     }
@@ -146,5 +145,111 @@ public class SmlMessageDetectorTests
 
         viaObservable.Should().HaveCount(1);
         viaObservable[0].MessageBytes.Should().Equal(frameBytes);
+    }
+
+    [Fact]
+    public void Append_EmptyData_IsNoOp()
+    {
+        using var detector = new SmlMessageDetector(NullLogger<SmlMessageDetector>.Instance);
+        var received = new List<SmlFrame>();
+        detector.MessageReceived += (_, e) => received.Add(e.Frame);
+
+        detector.Append(ReadOnlySpan<byte>.Empty);
+
+        received.Should().BeEmpty();
+    }
+
+    [Fact]
+    public void Append_StartEscapeSplitAcrossCalls_StillDetectsFrame()
+    {
+        var payload = SampleSmlFile.BuildGetListResponsePayload();
+        var frameBytes = FrameBuilder.BuildFrame(payload);
+
+        using var detector = new SmlMessageDetector(NullLogger<SmlMessageDetector>.Instance);
+        var received = new List<SmlFrame>();
+        detector.MessageReceived += (_, e) => received.Add(e.Frame);
+
+        // Split inside the 8-byte start escape sequence so the detector has to keep
+        // a small tail buffer across Append calls.
+        detector.Append(frameBytes.AsSpan(0, 3));
+        detector.Append(frameBytes.AsSpan(3));
+
+        received.Should().HaveCount(1);
+        received[0].IsCrcValid.Should().BeTrue();
+    }
+
+    [Fact]
+    public void Reset_AfterPartialStartEscape_DropsBufferedData()
+    {
+        using var detector = new SmlMessageDetector(NullLogger<SmlMessageDetector>.Instance);
+        var received = new List<SmlFrame>();
+        detector.MessageReceived += (_, e) => received.Add(e.Frame);
+
+        detector.Append([0x1B, 0x1B, 0x1B, 0x1B, 0x01, 0x01]);
+        detector.Reset();
+
+        // After reset a new full frame must still be detected normally.
+        var payload = SampleSmlFile.BuildGetListResponsePayload();
+        detector.Append(FrameBuilder.BuildFrame(payload));
+
+        received.Should().HaveCount(1);
+    }
+
+    [Fact]
+    public void Append_MalformedEndEscape_RecoversAndFindsNextFrame()
+    {
+        var payload = SampleSmlFile.BuildGetListResponsePayload();
+        var good = FrameBuilder.BuildFrame(payload);
+
+        // Build a malformed frame: start escape + 4 body bytes + stray 4x 0x1B followed by a
+        // non-0x1A, non-0x1B byte that is not part of a valid end escape. The detector must
+        // resync and then parse the following good frame.
+        var malformed = new byte[]
+        {
+            0x1B, 0x1B, 0x1B, 0x1B, 0x01, 0x01, 0x01, 0x01,
+            0xAA, 0xBB, 0xCC, 0xDD,
+            0x1B, 0x1B, 0x1B, 0x1B, 0x42, 0x00, 0x00, 0x00
+        };
+
+        using var detector = new SmlMessageDetector(NullLogger<SmlMessageDetector>.Instance);
+        var received = new List<SmlFrame>();
+        detector.MessageReceived += (_, e) => received.Add(e.Frame);
+
+        detector.Append(malformed);
+        detector.Append(good);
+
+        received.Should().HaveCount(1);
+        received[0].IsCrcValid.Should().BeTrue();
+    }
+
+    [Fact]
+    public void Dispose_CompletesObservable()
+    {
+        var detector = new SmlMessageDetector(NullLogger<SmlMessageDetector>.Instance);
+        var completed = false;
+        using var sub = detector.Messages.Subscribe(_ => { }, () => completed = true);
+
+        ((IDisposable)detector).Dispose();
+
+        completed.Should().BeTrue();
+    }
+
+    [Fact]
+    public void Append_FrameContainingOddPadding_DeEscapesCorrectly()
+    {
+        // Payload whose length produces 2 bytes of padding (libSML aligns to 4).
+        var payload = new byte[] { 0x42, 0x42 };
+        var frameBytes = FrameBuilder.BuildFrame(payload);
+
+        using var detector = new SmlMessageDetector(NullLogger<SmlMessageDetector>.Instance);
+        var received = new List<SmlFrame>();
+        detector.MessageReceived += (_, e) => received.Add(e.Frame);
+
+        detector.Append(frameBytes);
+
+        received.Should().ContainSingle();
+        received[0].IsCrcValid.Should().BeTrue();
+        received[0].PayloadBytes.Should().Equal(0x42, 0x42);
+        received[0].PaddingBytes.Should().Be(2);
     }
 }

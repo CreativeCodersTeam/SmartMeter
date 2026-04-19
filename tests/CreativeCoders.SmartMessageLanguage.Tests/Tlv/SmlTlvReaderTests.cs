@@ -121,4 +121,104 @@ public class SmlTlvReaderTests
         reader.Read().Should().BeTrue();
         reader.Current.GetUInt64().Should().Be(9UL);
     }
+
+    [Fact]
+    public void Read_OnEmptyData_ReturnsFalse()
+    {
+        var reader = new SmlTlvReader(ReadOnlySpan<byte>.Empty);
+
+        reader.Read().Should().BeFalse();
+        reader.EndOfData.Should().BeTrue();
+    }
+
+    [Theory]
+    [InlineData((byte)0x12)]
+    [InlineData((byte)0x22)]
+    [InlineData((byte)0x32)]
+    public void Read_UnknownTypeNibble_Throws(byte header)
+    {
+        var data = new byte[] { header, 0x00 };
+
+        var act = () => ReadFirst(data);
+
+        act.Should().Throw<InvalidOperationException>()
+            .WithMessage("*TLV type nibble*");
+    }
+
+    [Fact]
+    public void Read_TruncatedLengthField_Throws()
+    {
+        // 0x80 declares "another length byte follows" but data ends.
+        var data = new byte[] { 0x80 };
+
+        var act = () => ReadFirst(data);
+
+        act.Should().Throw<InvalidOperationException>()
+            .WithMessage("*Truncated TLV length field*");
+    }
+
+    [Fact]
+    public void Read_TruncatedPrimitivePayload_Throws()
+    {
+        // 0x05 declares OctetString of total length 5 → 4 payload bytes, but only 2 present.
+        var data = new byte[] { 0x05, 0xAA, 0xBB };
+
+        var act = () => ReadFirst(data);
+
+        act.Should().Throw<InvalidOperationException>()
+            .WithMessage("*Truncated TLV element*");
+    }
+
+    [Fact]
+    public void SkipCurrent_OnPrimitive_IsNoOp()
+    {
+        var data = new byte[] { 0x62, 0x2A, 0x62, 0x2B };
+        var reader = new SmlTlvReader(data);
+        reader.Read();
+
+        reader.SkipCurrent();
+
+        reader.Read().Should().BeTrue();
+        reader.Current.GetUInt64().Should().Be(0x2BUL);
+    }
+
+    [Fact]
+    public void SkipCurrent_OnListWithMissingChildren_Throws()
+    {
+        // List(2) but only one child present.
+        var data = new byte[] { 0x72, 0x62, 0x01 };
+
+        var act = () => ReadListThenSkip(data);
+
+        act.Should().Throw<InvalidOperationException>()
+            .WithMessage("*end of data while skipping list*");
+    }
+
+    [Fact]
+    public void Position_AdvancesAcrossReads()
+    {
+        var data = new byte[] { 0x62, 0x01, 0x62, 0x02 };
+        var reader = new SmlTlvReader(data);
+
+        reader.Position.Should().Be(0);
+        reader.Read();
+        reader.Position.Should().Be(2);
+        reader.Read();
+        reader.Position.Should().Be(4);
+        reader.EndOfData.Should().BeTrue();
+    }
+
+    // Helpers that avoid capturing ref struct 'SmlTlvReader' inside lambdas.
+    private static void ReadFirst(byte[] data)
+    {
+        var reader = new SmlTlvReader(data);
+        reader.Read();
+    }
+
+    private static void ReadListThenSkip(byte[] data)
+    {
+        var reader = new SmlTlvReader(data);
+        reader.Read();
+        reader.SkipCurrent();
+    }
 }

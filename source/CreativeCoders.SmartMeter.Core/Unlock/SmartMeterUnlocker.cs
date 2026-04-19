@@ -2,17 +2,30 @@ using System.Diagnostics;
 using System.Text;
 using CreativeCoders.Core;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace CreativeCoders.SmartMeter.Core.Unlock;
 
-public sealed class SmartMeterUnlocker(ILogger<SmartMeterUnlocker> logger) : ISmartMeterUnlocker
+public sealed class SmartMeterUnlocker : ISmartMeterUnlocker
 {
-    private readonly ILogger<SmartMeterUnlocker> _logger = Ensure.NotNull(logger);
+    private readonly ILogger<SmartMeterUnlocker> _logger;
 
     // Own serial port instance used exclusively for the unlock procedure. The port
     // is used to write the PIN payload and to observe the incoming bytes for
     // verification evidence (extended OBIS codes / ACK byte).
-    private readonly ReactiveSerialPort _serialPort = new ReactiveSerialPort("/dev/ttyUSB0");
+    private readonly IReactiveSerialPort _serialPort;
+
+    public SmartMeterUnlocker(
+        ILogger<SmartMeterUnlocker> logger,
+        IReactiveSerialPortFactory serialPortFactory,
+        IOptions<SmartMeterOptions> smartMeterOptions)
+    {
+        _logger = Ensure.NotNull(logger);
+        Ensure.NotNull(serialPortFactory);
+        var options = Ensure.NotNull(smartMeterOptions).Value;
+
+        _serialPort = serialPortFactory.Create(options.PortName);
+    }
 
     public async Task<SmartMeterUnlockResult> UnlockAsync(
         string pin,

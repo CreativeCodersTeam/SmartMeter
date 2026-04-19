@@ -14,4 +14,8 @@
         <ProjectReference Include="..\CreativeCoders.SmartMeter.DataProcessing\CreativeCoders.SmartMeter.DataProcessing.csproj"/>
     </ItemGroup>
 
+    <ItemGroup>
+        <InternalsVisibleTo Include="CreativeCoders.SmartMeter.Core.Tests"/>
+    </ItemGroup>
+
 </Project>

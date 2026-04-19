@@ -3,18 +3,31 @@ using System.Reactive.Linq;
 using CreativeCoders.Core;
 using CreativeCoders.SmartMeter.DataProcessing;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace CreativeCoders.SmartMeter.Core.SmlData;
 
-public sealed class SmartMeterDataProducer(
-    ISmartMeterReactiveDataPipeline reactiveDataPipeline,
-    ILogger<SmartMeterDataProducer> logger) : ISmartMeterDataProducer
+public sealed class SmartMeterDataProducer : ISmartMeterDataProducer
 {
-    private readonly ISmartMeterReactiveDataPipeline _reactiveDataPipeline = Ensure.NotNull(reactiveDataPipeline);
-    private readonly ILogger<SmartMeterDataProducer> _logger = Ensure.NotNull(logger);
-    private readonly ReactiveSerialPort _serialPort = new ReactiveSerialPort("/dev/ttyUSB0");
+    private readonly ISmartMeterReactiveDataPipeline _reactiveDataPipeline;
+    private readonly ILogger<SmartMeterDataProducer> _logger;
+    private readonly IReactiveSerialPort _serialPort;
 
     private IDisposable? _subscription;
+
+    public SmartMeterDataProducer(
+        ISmartMeterReactiveDataPipeline reactiveDataPipeline,
+        ILogger<SmartMeterDataProducer> logger,
+        IReactiveSerialPortFactory serialPortFactory,
+        IOptions<SmartMeterOptions> smartMeterOptions)
+    {
+        _reactiveDataPipeline = Ensure.NotNull(reactiveDataPipeline);
+        _logger = Ensure.NotNull(logger);
+        Ensure.NotNull(serialPortFactory);
+        var options = Ensure.NotNull(smartMeterOptions).Value;
+
+        _serialPort = serialPortFactory.Create(options.PortName);
+    }
 
     public Task StartAsync(IObserver<SmartMeterValue> observer)
     {
