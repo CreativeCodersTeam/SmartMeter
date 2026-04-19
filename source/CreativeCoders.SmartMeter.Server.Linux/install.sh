@@ -11,7 +11,7 @@ if systemctl status "$SERVICE_NAME" >/dev/null 2>&1; then
 fi
 
 if [ -d "$APP_DIR" ]; then
-  echo "Delete existing installation files"
+  echo "Create backup from latest installation"
   rm -rf "${APP_DIR:?}.bak/"*
   mv -f "$APP_DIR" "${APP_DIR:?}.bak"
 else
