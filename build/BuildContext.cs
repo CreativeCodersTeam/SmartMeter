@@ -38,20 +38,32 @@ public class BuildContext(ICakeContext context)
 
     private const string CliProjectFile = "CreativeCoders.SmartMeter.Cli.csproj";
 
+    private const string ServerLinuxPath = "source/CreativeCoders.SmartMeter.Server.Linux";
+
+    private const string ServerLinuxProjectFile = "CreativeCoders.SmartMeter.Server.Linux.csproj";
+
     public IEnumerable<PublishingItem> PublishingItems =>
     [
         new PublishingItem(
             RootDir
                 .Combine(CliPath)
                 .CombineWithFilePath(CliProjectFile),
-            PublishOutputDir.Combine("cli"))
+            PublishOutputDir.Combine("cli")),
+        new PublishingItem(
+            RootDir
+                .Combine(ServerLinuxPath)
+                .CombineWithFilePath(ServerLinuxProjectFile),
+            PublishOutputDir.Combine("server-linux"))
     ];
 
     private const string CliDistPackageName = "SmartMeter.Cli";
 
+    private const string ServerLinuxDistPackageName = "SmartMeter.Server.Linux";
+
     public IEnumerable<DistPackage> DistPackages =>
     [
-        new DistPackage(CliDistPackageName, PublishOutputDir.Combine("cli"))
+        new DistPackage(CliDistPackageName, PublishOutputDir.Combine("cli")),
+        new DistPackage(ServerLinuxDistPackageName, PublishOutputDir.Combine("server-linux"))
     ];
 
     public string ReleaseName => $"v{Version.FullSemVer}";
@@ -66,6 +78,9 @@ public class BuildContext(ICakeContext context)
     [
         new GitHubReleaseFileAsset(
             GetRequiredSettings<ICreateDistPackagesTaskSettings>().DistOutputPath
-                .CombineWithFilePath(CliDistPackageName + ".tar.gz").FullPath, null)
+                .CombineWithFilePath(CliDistPackageName + ".tar.gz").FullPath, null),
+        new GitHubReleaseFileAsset(
+            GetRequiredSettings<ICreateDistPackagesTaskSettings>().DistOutputPath
+                .CombineWithFilePath(ServerLinuxDistPackageName + ".tar.gz").FullPath, null)
     ];
 }

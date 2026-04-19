@@ -34,6 +34,11 @@ jobs:
         with:
           name: SmartMeter.Cli
           path: .artifacts/dist/SmartMeter.Cli.tar.gz
+      - name: 'Publish: server Linux dist package'
+        uses: actions/upload-artifact@v7
+        with:
+          name: SmartMeter.Server.Linux
+          path: .artifacts/dist/SmartMeter.Server.Linux.tar.gz
   macos-latest:
     name: macos-latest
     runs-on: macos-latest
