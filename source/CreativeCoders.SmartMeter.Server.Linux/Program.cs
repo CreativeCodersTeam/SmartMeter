@@ -1,4 +1,6 @@
 ﻿using CreativeCoders.Daemon.Linux;
+using CreativeCoders.SmartMeter.Core;
+using CreativeCoders.SmartMeter.Core.SmlData;
 using CreativeCoders.SmartMeter.DataProcessing;
 using CreativeCoders.SmartMeter.Server.Core;
 using Microsoft.Extensions.Configuration;
@@ -13,10 +15,12 @@ await SmartMeterDaemonHostBuilder.CreateSmartMeterDaemonHostBuilder(args)
         var config = services.BuildServiceProvider().GetRequiredService<IConfiguration>();
 
         services.Configure<MqttPublisherOptions>(config.GetSection("Mqtt"));
+
+        services.AddSingleton<ISmartMeterDataProducer, SmartMeterDataProducer>();
+        services.AddSmartMeterServer();
     })
     .WithDefinitionFile("daemon.json")
     .UseSystemd()
     .Build()
     .RunAsync()
     .ConfigureAwait(false);
-    

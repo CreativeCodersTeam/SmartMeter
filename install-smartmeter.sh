@@ -46,7 +46,7 @@ Requires: curl, tar, jq, sudo (and gh authenticated when --workflows is used).
 EOF
 }
 
-log()  { printf '%s\n' "$*"; }
+log()  { printf '%s\n' "$*" >&2; }
 warn() { printf 'WARN: %s\n' "$*" >&2; }
 err()  { printf 'ERROR: %s\n' "$*" >&2; }
 
