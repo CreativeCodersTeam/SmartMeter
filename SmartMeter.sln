@@ -10,11 +10,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "__global", "__global", "{EA
 		global.json = global.json
 		LICENSE = LICENSE
 		README.md = README.md
+		Directory.Build.props = Directory.Build.props
+		Directory.Packages.props = Directory.Packages.props
+		install-smartmeter.sh = install-smartmeter.sh
 	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreativeCoders.SmartMeter.Sml", "source\CreativeCoders.SmartMeter.Sml\CreativeCoders.SmartMeter.Sml.csproj", "{3AE1B70E-C752-4E89-B0FC-D3FF85462C99}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_build", "build\_build.csproj", "{9CFDCB58-C344-4BF8-9377-60B4D2A684A6}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_build", "_build", "{AEAE0BA3-481C-45C3-825C-71A5CE7F6A78}"
 EndProject
@@ -28,26 +27,42 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{675F198B
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreativeCoders.SmartMeter.DataProcessing.Tests", "tests\CreativeCoders.SmartMeter.DataProcessing.Tests\CreativeCoders.SmartMeter.DataProcessing.Tests.csproj", "{29653CEF-A35C-4F4F-88EB-9336B7ABA9FB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreativeCoders.SmartMeter.Cli", "source\CreativeCoders.SmartMeter.Cli\CreativeCoders.SmartMeter.Cli.csproj", "{344911B2-1104-457A-BD41-91EF270748A9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreativeCoders.SmartMessageLanguage", "source\CreativeCoders.SmartMessageLanguage\CreativeCoders.SmartMessageLanguage.csproj", "{B70158C0-A913-4877-9414-5CD5F39772F0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreativeCoders.SmartMessageLanguage.Tests", "tests\CreativeCoders.SmartMessageLanguage.Tests\CreativeCoders.SmartMessageLanguage.Tests.csproj", "{D956F76F-3826-4A51-8D05-8B35C062605F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreativeCoders.SmartMeter.Core", "source\CreativeCoders.SmartMeter.Core\CreativeCoders.SmartMeter.Core.csproj", "{1B1D2F22-9BC1-4F69-82D8-1B3FB7C1BFB3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreativeCoders.SmartMeter.Core.Tests", "tests\CreativeCoders.SmartMeter.Core.Tests\CreativeCoders.SmartMeter.Core.Tests.csproj", "{63623865-60E4-428D-AFDA-5B309A69A69D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreativeCoders.SmartMeter.Server.Core.Tests", "tests\CreativeCoders.SmartMeter.Server.Core.Tests\CreativeCoders.SmartMeter.Server.Core.Tests.csproj", "{3DA3A6E4-BC76-4465-AB2E-BE571D7A9B5A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Build", "build\Build.csproj", "{ECD46CF5-A11F-46C9-B274-475F950F10E2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ci", "ci", "{65B0A31B-BCDB-4768-890F-ED46A4773182}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\integration.yml = .github\workflows\integration.yml
+		.github\workflows\main.yml = .github\workflows\main.yml
+		.github\workflows\pull-request.yml = .github\workflows\pull-request.yml
+		.github\workflows\release.yml = .github\workflows\release.yml
+		.github\workflows\sync-ai-config.yml = .github\workflows\sync-ai-config.yml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{0313FF7A-1065-4C2C-8E8F-53014EB7D314}"
+	ProjectSection(SolutionItems) = preProject
+		build.cmd = build.cmd
+		build.ps1 = build.ps1
+		build.sh = build.sh
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{3AE1B70E-C752-4E89-B0FC-D3FF85462C99} = {B259CB14-56CC-45FA-9756-64A195F4F789}
-		{9CFDCB58-C344-4BF8-9377-60B4D2A684A6} = {AEAE0BA3-481C-45C3-825C-71A5CE7F6A78}
-		{9452116E-6A8B-42D2-BBDD-BF465097AEA1} = {B259CB14-56CC-45FA-9756-64A195F4F789}
-		{7AD8C940-B783-4FE9-B437-CE7FB87A97CA} = {B259CB14-56CC-45FA-9756-64A195F4F789}
-		{29638431-6971-4757-BE3B-A83D96300ED4} = {B259CB14-56CC-45FA-9756-64A195F4F789}
-		{29653CEF-A35C-4F4F-88EB-9336B7ABA9FB} = {675F198B-B173-421F-A53B-F7B98C8D0E4F}
-	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{9CFDCB58-C344-4BF8-9377-60B4D2A684A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9CFDCB58-C344-4BF8-9377-60B4D2A684A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3AE1B70E-C752-4E89-B0FC-D3FF85462C99}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3AE1B70E-C752-4E89-B0FC-D3FF85462C99}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3AE1B70E-C752-4E89-B0FC-D3FF85462C99}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3AE1B70E-C752-4E89-B0FC-D3FF85462C99}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9452116E-6A8B-42D2-BBDD-BF465097AEA1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9452116E-6A8B-42D2-BBDD-BF465097AEA1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9452116E-6A8B-42D2-BBDD-BF465097AEA1}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -64,5 +79,49 @@ Global
 		{29653CEF-A35C-4F4F-88EB-9336B7ABA9FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{29653CEF-A35C-4F4F-88EB-9336B7ABA9FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{29653CEF-A35C-4F4F-88EB-9336B7ABA9FB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{344911B2-1104-457A-BD41-91EF270748A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{344911B2-1104-457A-BD41-91EF270748A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{344911B2-1104-457A-BD41-91EF270748A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{344911B2-1104-457A-BD41-91EF270748A9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B70158C0-A913-4877-9414-5CD5F39772F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B70158C0-A913-4877-9414-5CD5F39772F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B70158C0-A913-4877-9414-5CD5F39772F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B70158C0-A913-4877-9414-5CD5F39772F0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D956F76F-3826-4A51-8D05-8B35C062605F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D956F76F-3826-4A51-8D05-8B35C062605F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D956F76F-3826-4A51-8D05-8B35C062605F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D956F76F-3826-4A51-8D05-8B35C062605F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1B1D2F22-9BC1-4F69-82D8-1B3FB7C1BFB3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B1D2F22-9BC1-4F69-82D8-1B3FB7C1BFB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B1D2F22-9BC1-4F69-82D8-1B3FB7C1BFB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B1D2F22-9BC1-4F69-82D8-1B3FB7C1BFB3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{63623865-60E4-428D-AFDA-5B309A69A69D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{63623865-60E4-428D-AFDA-5B309A69A69D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{63623865-60E4-428D-AFDA-5B309A69A69D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{63623865-60E4-428D-AFDA-5B309A69A69D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3DA3A6E4-BC76-4465-AB2E-BE571D7A9B5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3DA3A6E4-BC76-4465-AB2E-BE571D7A9B5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3DA3A6E4-BC76-4465-AB2E-BE571D7A9B5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3DA3A6E4-BC76-4465-AB2E-BE571D7A9B5A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ECD46CF5-A11F-46C9-B274-475F950F10E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ECD46CF5-A11F-46C9-B274-475F950F10E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{9452116E-6A8B-42D2-BBDD-BF465097AEA1} = {B259CB14-56CC-45FA-9756-64A195F4F789}
+		{7AD8C940-B783-4FE9-B437-CE7FB87A97CA} = {B259CB14-56CC-45FA-9756-64A195F4F789}
+		{29638431-6971-4757-BE3B-A83D96300ED4} = {B259CB14-56CC-45FA-9756-64A195F4F789}
+		{29653CEF-A35C-4F4F-88EB-9336B7ABA9FB} = {675F198B-B173-421F-A53B-F7B98C8D0E4F}
+		{344911B2-1104-457A-BD41-91EF270748A9} = {B259CB14-56CC-45FA-9756-64A195F4F789}
+		{B70158C0-A913-4877-9414-5CD5F39772F0} = {B259CB14-56CC-45FA-9756-64A195F4F789}
+		{D956F76F-3826-4A51-8D05-8B35C062605F} = {675F198B-B173-421F-A53B-F7B98C8D0E4F}
+		{1B1D2F22-9BC1-4F69-82D8-1B3FB7C1BFB3} = {B259CB14-56CC-45FA-9756-64A195F4F789}
+		{63623865-60E4-428D-AFDA-5B309A69A69D} = {675F198B-B173-421F-A53B-F7B98C8D0E4F}
+		{3DA3A6E4-BC76-4465-AB2E-BE571D7A9B5A} = {675F198B-B173-421F-A53B-F7B98C8D0E4F}
+		{ECD46CF5-A11F-46C9-B274-475F950F10E2} = {AEAE0BA3-481C-45C3-825C-71A5CE7F6A78}
+		{65B0A31B-BCDB-4768-890F-ED46A4773182} = {AEAE0BA3-481C-45C3-825C-71A5CE7F6A78}
+		{0313FF7A-1065-4C2C-8E8F-53014EB7D314} = {AEAE0BA3-481C-45C3-825C-71A5CE7F6A78}
 	EndGlobalSection
 EndGlobal

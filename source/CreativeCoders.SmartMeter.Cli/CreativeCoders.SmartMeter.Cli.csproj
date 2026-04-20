@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <AssemblyName>smc</AssemblyName>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Spectre.Console"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\CreativeCoders.SmartMeter.Server.Core\CreativeCoders.SmartMeter.Server.Core.csproj"/>
+    </ItemGroup>
+
+</Project>

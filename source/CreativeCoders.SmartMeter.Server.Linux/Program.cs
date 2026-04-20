@@ -19,3 +19,4 @@ await SmartMeterDaemonHostBuilder.CreateSmartMeterDaemonHostBuilder(args)
     .Build()
     .RunAsync()
     .ConfigureAwait(false);
+    

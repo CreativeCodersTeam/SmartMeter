@@ -1,15 +1,10 @@
 ﻿namespace CreativeCoders.SmartMeter.DataProcessing;
 
-public class SmartMeterValue
+public class SmartMeterValue(SmartMeterValueType type)
 {
-    public SmartMeterValue(SmartMeterValueType type)
-    {
-        Type = type;
-    }
-
-    public SmartMeterValueType Type { get; }
+    public SmartMeterValueType Type { get; } = type;
 
     public decimal Value { get; init; }
 
-    public bool WriteAsJson { get; set; } = true;
+    public bool WriteAsJson { get; init; } = true;
 }

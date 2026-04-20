@@ -1,6 +1,6 @@
 ﻿using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using CreativeCoders.SmartMeter.Sml;
+using CreativeCoders.SmartMeter.DataProcessing.History;
 
 namespace CreativeCoders.SmartMeter.DataProcessing;
 
@@ -78,19 +78,20 @@ public class SmlValueProcessor : IObservable<SmartMeterValue>
             return;
         }
 
+        // ReSharper disable once SwitchStatementMissingSomeEnumCasesNoDefault
         switch (value.Type)
         {
             case SmartMeterValueType.CurrentPurchasingPower:
                 _valueSubject.OnNext(new SmartMeterValue(SmartMeterValueType.GridPowerBalance)
                 {
-                    Value = value.Value,
+                    Value = value.Value * -1,
                     WriteAsJson = false
                 });
                 break;
             case SmartMeterValueType.CurrentSellingPower:
                 _valueSubject.OnNext(new SmartMeterValue(SmartMeterValueType.GridPowerBalance)
                 {
-                    Value = value.Value * -1,
+                    Value = value.Value,
                     WriteAsJson = false
                 });
                 break;

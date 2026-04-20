@@ -1,5 +1,10 @@
-﻿using CreativeCoders.Daemon;
+using CreativeCoders.Daemon;
+using CreativeCoders.SmartMeter.Core;
+using CreativeCoders.SmartMeter.DataProcessing;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Serilog;
 using Serilog.Events;
 
@@ -20,5 +25,10 @@ public static class SmartMeterDaemonHostBuilder
     private static void ConfigureServices(IServiceCollection services)
     {
         services.AddOptions();
+        services.AddSmartMeterServer();
+
+        services.TryAddSingleton<IMqttValuePublisher>(sp => new MqttValuePublisher(
+            sp.GetRequiredService<IOptions<MqttPublisherOptions>>().Value,
+            sp.GetRequiredService<ILogger<MqttValuePublisher>>()));
     }
 }
