@@ -84,14 +84,14 @@ public class SmlValueProcessor : IObservable<SmartMeterValue>
             case SmartMeterValueType.CurrentPurchasingPower:
                 _valueSubject.OnNext(new SmartMeterValue(SmartMeterValueType.GridPowerBalance)
                 {
-                    Value = value.Value * -1,
+                    Value = value.Value,
                     WriteAsJson = false
                 });
                 break;
             case SmartMeterValueType.CurrentSellingPower:
                 _valueSubject.OnNext(new SmartMeterValue(SmartMeterValueType.GridPowerBalance)
                 {
-                    Value = value.Value,
+                    Value = value.Value * -1,
                     WriteAsJson = false
                 });
                 break;

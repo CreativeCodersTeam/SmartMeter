@@ -47,7 +47,7 @@ public class SmlValueProcessorTests
     {
         // Arrange
         var expectedBalanceValue = (smlValueValue2 - smlValueValue1) * 60;
-        if (smlValueType == SmlValueType.PurchasedEnergy)
+        if (smlValueType == SmlValueType.SoldEnergy)
         {
             expectedBalanceValue *= -1;
         }
@@ -185,7 +185,7 @@ public class SmlValueProcessorTests
     }
 
     [Fact]
-    public void Subscribe_WithPurchasedEnergyGap_EmitsNegativeGridPowerBalance()
+    public void Subscribe_WithPurchasedEnergyGap_EmitsPositiveGridPowerBalance()
     {
         // Arrange
         var results = new List<SmartMeterValue>();
@@ -201,7 +201,7 @@ public class SmlValueProcessorTests
 
         // Assert
         var balance = results.Single(x => x.Type == SmartMeterValueType.GridPowerBalance);
-        balance.Value.Should().BeLessThan(0m);
+        balance.Value.Should().BeGreaterThan(0m);
         balance.WriteAsJson.Should().BeFalse();
     }
 
